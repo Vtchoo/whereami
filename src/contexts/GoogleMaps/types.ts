@@ -46,6 +46,7 @@ export interface StreetViewPanoramaData {
     imageDate?: string
     links?: StreetViewLink[]
     location?: StreetViewLocation
+    time?: { pano: string, mh: Date }[]
 }
 
 export interface StreetViewResponse {
