@@ -1,9 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+
 :root {
 
-	--primary-hue: 240;
-	--primary: hsl(var(--primary-hue), 100%, 35%);
-	--primary-dark: hsl(var(--primary-hue), 100%, 25%);
-	--primary-light: hsl(var(--primary-hue), 100%, 45%);
+	--primary-hue: 221;
+
+	--primary: hsl(var(--primary-hue), 30%, 32%);
+	--primary-light: hsl(var(--primary-hue), 25%, 46%);
+	--primary-dark: hsl(var(--primary-hue), 25%, 25%);
+
+	--backgroundgrey: hsl(220, 13%, 95%);
+	--bordergrey: hsl(214, 19%, 93%);
+	--white: hsl(0, 0%, 100%);
+	--accept: hsl(109, 100%, 25%);
+	--disabled: hsl(0, 0%, 54%);
+	--danger: hsl(350, 89%, 54%);
+	--warning: hsl(22, 89%, 54%);
+	--wait: hsl(40, 89%, 54%);
+	--info: hsl(200, 89%, 54%);
+
+	--primary-font: Inter, Arial, Helvetica, sans-serif;
+	--secondary-font: Nunito, Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -14,7 +31,7 @@
 
 body {
   	margin: 0;
-  	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  	font-family: var(--primary-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   	-webkit-font-smoothing: antialiased;
@@ -22,6 +39,7 @@ body {
   	width: 100vw;
 	height: 100vh;
 
+	background-color: whitesmoke;
 }
 
 #root {

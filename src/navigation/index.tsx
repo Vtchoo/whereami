@@ -4,6 +4,7 @@ import Modal from '../components/Modal'
 import { useAuth } from '../contexts/AuthContext'
 import { Login } from '../pages/Login'
 import { SignUp } from "../pages/SignUp"
+import { InternalNavigation } from "./internal"
 // import Signin from "../../pages/Signin"
 // import InternalNavigation from "../Internal"
 // import ForgotPassword from "../../pages/ForgotPassword"
@@ -15,9 +16,9 @@ function PrivateRoute({ children, ...props }: { children?: ReactNode } & RoutePr
 
     const location = useLocation()
 
-    // if (authenticating) return <Modal>Logging in</Modal>
+    if (authenticating) return <Modal>Logging in</Modal>
 
-    // if (!loggedIn) return <Redirect to={{ pathname: '/login', search: `?from=${location.pathname}` }} />
+    if (!loggedIn) return <Redirect to={{ pathname: '/login', search: `?from=${location.pathname}` }} />
 
     return (
         <Route {...props}>
@@ -30,7 +31,7 @@ function ExternalRoute({ children, ...props }: { children?: ReactNode } & RouteP
  
     const { user, loggedIn, authenticating } = useAuth()
     
-    // if (authenticating) return <Modal>Logging in</Modal>
+    if (authenticating) return <Modal>Logging in</Modal>
     // const from = state?.from
 
     if (loggedIn) return <Redirect to={{ pathname: '/' }} />
@@ -54,9 +55,7 @@ function MainNavigation() {
                 <ExternalRoute exact path='/redefinepassword'>
                     <RedefinePassword />
                 </ExternalRoute> */}
-                <PrivateRoute path='/'>
-                    {/* <InternalNavigation /> */}
-                </PrivateRoute>
+                <PrivateRoute path='/' component={InternalNavigation}/>
             </Switch>
         </BrowserRouter>
     )

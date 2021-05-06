@@ -1,3 +1,4 @@
+import { PageHome } from "./Home"
 
 interface IPage {
     name: string
@@ -17,4 +18,9 @@ interface ISection {
     icon?: string
 }
 
+const pages: IPage[] = [
+    PageHome,
+]
+
+export { pages }
 export type { IPage, ISection }

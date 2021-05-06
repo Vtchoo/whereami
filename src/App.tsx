@@ -7,9 +7,7 @@ import MainNavigation from './navigation';
 function App() {
 	return (
 		<AuthProvider>
-			<GoogleMapsProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-				<MainNavigation />
-			</GoogleMapsProvider>
+			<MainNavigation />
 		</AuthProvider>
 
 		// <GoogleMapsProvider

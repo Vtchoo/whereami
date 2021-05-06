@@ -1,0 +1,25 @@
+.mainContainer {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    /* background-color: aqua; */
+}
+
+.container {
+    display: flex;
+
+    flex: 1;
+    overflow-y: hidden;
+    /* height: 100%; */
+}
+
+.contentContainer {
+    /* height: 100%; */
+    overflow-y: auto;
+    flex: 1;
+
+    /* background-color: lightgreen; */
+}

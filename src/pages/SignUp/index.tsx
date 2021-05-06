@@ -1,12 +1,17 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Icon from '../../components/Icon'
 import User, { IUser } from '../../models/User'
 import style from '../.styles/external.module.css'
 import { useDebounce } from '../../hooks/useDebounce'
+import { useAuth } from '../../contexts/AuthContext'
 
 function SignUp() {
 
+    // Hooks
+    const history = useHistory()
+
+    // State
     const [user, setUser] = useState({} as IUser)
 
     const [usernameIsValid, setUsernameIsValid] = useState<boolean>()
@@ -46,6 +51,29 @@ function SignUp() {
         }
     }
 
+    async function handleCreateAccount() {
+
+        if (!user.username) return setMessage(`Username required`)
+        if (!user.email) return setMessage('Email required')
+        if (!user.password) return setMessage('Password required')
+        if(user.password !== confirmPassword) return setMessage('Passwords don\'t match')
+        
+        setMessage('')
+
+        try {
+            
+            const result = await User.create(user)
+
+            alert('User created successfully!')
+
+            history.replace('/login')
+
+        } catch (error) {
+            console.log(error)
+            setMessage(error.response?.data?.message)
+        }
+    }
+
     return (
         <div className={style.mainContainer}>
             <div className={style.background}/>
@@ -63,24 +91,24 @@ function SignUp() {
                         <small>{usernameMessage}</small>
                         <div className={style.inputContainer}>
                             <Icon icon='at' size='1.5rem' color='grey'/>
-                            <input value={user.email || ''} placeholder='Email' className={style.input} />
+                            <input value={user.email || ''} placeholder='Email' className={style.input} onChange={e => changeUser({ email: e.target.value }) }/>
                         </div>
                         <small>{emailMessage}</small>
                         <div className={style.inputContainer}>
                             <Icon icon='key-variant' size='1.5rem' color='grey'/>
-                            <input value={user.password || ''} placeholder='Password' className={style.input} type='password' />
+                            <input value={user.password || ''} placeholder='Password' className={style.input} type='password' onChange={e => changeUser({ password: e.target.value })}/>
                         </div>
                         <div className={style.inputContainer}>
                             <Icon icon='key-variant' size='1.5rem' color='grey'/>
-                            <input placeholder='Confirm your password' className={style.input} type='password' />
+                            <input placeholder='Confirm your password' className={style.input} type='password' onChange={e => setConfirmPassword(e.target.value)}/>
                         </div>
                         <small>{confirmPasswordMessage}</small>
                     </div>
 
-                    <span>{message}</span>
+                    <span style={{ color: 'red' }}>{message}</span>
 
                     <div className={style.buttons}>
-                        <button className={`${style.button} ${style.login}`}>Create account</button>
+                        <button className={`${style.button} ${style.login}`} onClick={handleCreateAccount}>Create account</button>
                         <Link to='/login' className={`${style.button} ${style.signup}`}>
                             Back to login
                         </Link>

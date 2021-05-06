@@ -14,7 +14,7 @@ interface AuthProviderProps {
 }
 
 interface AuthContextData {
-    user: any
+    user?: IUser
     login(username: string, password: string): Promise<void>
     logout(): Promise<void>
     loggedIn: boolean

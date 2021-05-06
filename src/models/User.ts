@@ -29,7 +29,7 @@ class User {
 	
 	static async create(user: IUser) {
 
-		const { data } = await api.post<IUser>(`/signin`, user)
+		const { data } = await api.post<IUser>(`/signup`, user)
 		return data
 	}
 
