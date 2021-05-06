@@ -41,7 +41,7 @@
     padding: 2rem;
     border-radius: 1rem;
 
-    background-color: rgba(255,255,255,.2);
+    background-color: rgba(0,0,0,.5);
 }
 
 .header {
@@ -66,6 +66,10 @@
     flex-direction: column;
     align-self: stretch;
     gap: 1rem;
+}
+
+.inputs > small {
+    color: white;
 }
 
 .inputContainer {
