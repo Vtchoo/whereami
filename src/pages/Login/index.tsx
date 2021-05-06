@@ -1,5 +1,6 @@
 import { SVGProps } from 'react'
 import { Link } from 'react-router-dom'
+import Icon from '../../components/Icon'
 import style from '../.styles/external.module.css'
 
 function Logo(props: SVGProps<SVGSVGElement>) {
@@ -12,21 +13,34 @@ function Logo(props: SVGProps<SVGSVGElement>) {
 
 function Login() {
 
-
-
     return (
         <div className={style.mainContainer}>
             <div className={style.background}/>
             <div className={style.loginbox}>
                 <div className={style.formContainer}>
-                    <Logo className={style.AppLogo} style={{ width: 100, height: 100 }} />
-                    <h1 className={style.title}>whereami</h1>
-                    <input placeholder='User' className={style.input} />
-                    <input placeholder='Password' className={style.input} type='password' />
-                    <button className={`${style.button} ${style.login}`}>Login</button>
-                    <Link to='/signup' className={`${style.button} ${style.signup}`}>
-                        Sign Up
-                    </Link>
+
+                    <div className={style.header}>
+                        <Logo className={style.AppLogo} style={{ width: 100, height: 100 }} />
+                        <h1 className={style.title}>whereami</h1>
+                    </div>
+
+                    <div className={style.inputs}>
+                        <div className={style.inputContainer}>
+                            <Icon icon='user' size='1.5rem' color='grey'/>
+                            <input placeholder='User' />
+                        </div>
+                        <div className={style.inputContainer}>
+                            <Icon icon='key-variant' size='1.5rem' color='grey'/>
+                            <input placeholder='Password'type='password' />
+                        </div>
+                    </div>
+
+                    <div className={style.buttons}>
+                        <button className={`${style.button} ${style.login}`}>Login</button>
+                        <Link to='/signup' className={`${style.button} ${style.signup}`}>
+                            Sign Up
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
