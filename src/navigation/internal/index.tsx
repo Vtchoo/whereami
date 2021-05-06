@@ -19,7 +19,7 @@ function InternalNavigation() {
 
                         {pages.map((page, i) => {
                         
-                            return <Route path={page.path} exact={page.exact} component={page.component} />
+                            return <Route key={page.name} path={page.path} exact={page.exact} component={page.component} />
                         })}
                     </div>
                 </div>

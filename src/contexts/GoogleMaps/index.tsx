@@ -1,9 +1,10 @@
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, StreetViewPanorama, StreetViewPanoramaOptions } from './types'
+import { GoogleMapsApi, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService } from './types'
 
 interface GoogleMapsContextData {
     createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama | undefined
     googleMapsLoaded: boolean
+    getRandomPanorama(): Promise<StreetViewPanoramaData>
 }
 
 interface GoogleMapsProviderProps {
@@ -24,6 +25,7 @@ const streetViewPanoramaOptions = {
 function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderProps) {
 
     const [googleMaps, setGoogleMaps] = useState<GoogleMapsApi>()
+    const [streetViewService, setStreetViewService] = useState<StreetViewService>()
 
     useEffect(() => {
 
@@ -42,6 +44,54 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
         return () => { document.body.removeChild(script) }
 
     }, [])
+
+    useEffect(() => {
+        if (!googleMaps) return
+        
+        const streetViewService = new googleMaps.StreetViewService()
+        setStreetViewService(streetViewService)
+
+    }, [googleMaps])
+
+    function getRandomPanorama(): Promise<StreetViewPanoramaData> {
+        
+        return new Promise((resolve, reject) => {
+            if (!streetViewService) throw new Error('No street view service loaded')
+
+            const STREETVIEW_MAX_DISTANCE = 1000
+            const position = {
+            	lat: Math.random() * 180 - 90,
+            	lng: Math.random() * 360 - 180,
+            }
+            // const position = { lat: 46.9171876, lng: 17.8951832 }
+            
+            const StreetViewLocationRequest = {
+                location: position,
+                radius: STREETVIEW_MAX_DISTANCE,
+            }
+
+            streetViewService.getPanorama(StreetViewLocationRequest, async (data, status) => {
+                if (status === googleMaps?.StreetViewStatus.OK)
+                    resolve(data)
+                else
+                    resolve(await getRandomPanorama())
+            })
+
+
+            //this.streetViewService.getPanoramaByLocation(position, STREETVIEW_MAX_DISTANCE, (streetViewPanoramaData, status) => {
+            // streetViewService.getPanorama(StreetViewLocationRequest, (streetViewPanoramaData, status) => {
+            //     if (status === this.props.googleMaps.StreetViewStatus.OK) {
+            //         console.log('panorama found')
+            //         console.log(streetViewPanoramaData)
+            //         this.streetView.setPosition(streetViewPanoramaData.location.latLng)
+            //     } else {
+            //         console.log(`no panorama found at location Lat: ${position.lat} Lng: ${position.lng}`)
+            //         this.GetNewPanorama()
+            //         // no street view available in this range, or some error occurred
+            //     }
+            // })
+        })
+    }
 
     // useEffect(() => {
         
@@ -88,7 +138,8 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     return (
         <GoogleMapsContext.Provider value={{
             createStreetView,
-            googleMapsLoaded: !!googleMaps
+            googleMapsLoaded: !!googleMaps,
+            getRandomPanorama
         }}>
             {children}
         </GoogleMapsContext.Provider>
