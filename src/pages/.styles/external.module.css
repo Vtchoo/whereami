@@ -1,0 +1,131 @@
+.background{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: url(https://novayorkevoce.com/wp-content/uploads/2016/01/pics-012.jpg);
+    background-size: cover;
+    filter: blur(8px);
+    z-index: -1;
+}
+
+.mainContainer{
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+.loginbox{
+    display: flex;
+    /* background-color: #282c34; */
+    width: 100vw; 
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    /* padding: 30px; */
+    align-items: center;
+    gap: 1rem;
+
+    padding: 2rem;
+    border-radius: 1rem;
+
+    background-color: rgba(255,255,255,.2);
+}
+
+.title{
+    /* margin: 10px; */
+    align-self: stretch;
+    color: white;
+    font-family: 'century gothic';
+    text-align: center;
+}
+
+.input{
+    align-self: stretch;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-family: 'century gothic';
+    border: none;
+    border-radius: .25rem;
+    outline: none;
+}
+
+.button {
+    align-self: stretch;
+    
+    border-width: 0px;
+    padding: 10px;
+    font-family: 'century gothic';
+
+    border-radius: .25rem;
+
+    text-decoration: none;
+    font-size: inherit;
+    display: flex;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: background-color .1s ease-in-out;
+}
+
+.button.login {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+.button.login:hover {
+    background-color: var(--primary);
+}
+
+.button.signup {
+    background-color: transparent;
+    border: 1px solid var(--primary-dark);
+    color: white;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .AppLogo {
+        padding: 10px;
+        animation: App-logo-float infinite 5s ease-in-out;
+        /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6); */
+        /* border-radius: 50%; */
+        /* animation: App-logo-spin infinite 15s ease-in-out; */
+    }
+}
+
+@keyframes App-logo-spin {
+    0% {
+        transform: scaleX(1);
+        /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6) */
+    }
+    50% {
+        transform: scaleX(-1);
+        /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.1) */
+    }
+    100% {
+        transform: scaleX(1);
+        /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6) */
+    }
+}
+
+@keyframes App-logo-float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}

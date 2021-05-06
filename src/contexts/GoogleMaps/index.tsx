@@ -43,40 +43,40 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
 
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        if (!googleMaps) return
+    //     if (!googleMaps) return
         
-        const streetViewService = new googleMaps.StreetViewService()
+    //     const streetViewService = new googleMaps.StreetViewService()
 
-        console.log(googleMaps)
+    //     console.log(googleMaps)
 
-        const streetViewPanoramaOptions = {
-            position: { lat: 46.9171876, lng: 17.8951832 },
-            pov: { heading: 100, pitch: 0 },
-            zoom: 1,
-            addressControl: false,
-            showRoadLabels: false,
-        };
+    //     const streetViewPanoramaOptions = {
+    //         position: { lat: 46.9171876, lng: 17.8951832 },
+    //         pov: { heading: 100, pitch: 0 },
+    //         zoom: 1,
+    //         addressControl: false,
+    //         showRoadLabels: false,
+    //     };
 
-        const streetViewPanoramaRequest = {
-            location: streetViewPanoramaOptions.position,
-            radius: 1000
-        }
+    //     const streetViewPanoramaRequest = {
+    //         location: streetViewPanoramaOptions.position,
+    //         radius: 1000
+    //     }
 
-        streetViewService.getPanorama(streetViewPanoramaRequest, (streetViewPanoramaData, status) => {
-            if (status === googleMaps.StreetViewStatus.OK) {
-                console.log('panorama found')
-                console.log(streetViewPanoramaData)
-                // streetView.setPosition(streetViewPanoramaData.location.latLng)
-            } else {
-                console.log(`no panorama found at location Lat: ${streetViewPanoramaRequest.location.lat} Lng: ${streetViewPanoramaRequest.location.lng}`)
-                // GetNewPanorama()
-                // no street view available in this range, or some error occurred
-            }
-        })
+    //     streetViewService.getPanorama(streetViewPanoramaRequest, (streetViewPanoramaData, status) => {
+    //         if (status === googleMaps.StreetViewStatus.OK) {
+    //             console.log('panorama found')
+    //             console.log(streetViewPanoramaData)
+    //             // streetView.setPosition(streetViewPanoramaData.location.latLng)
+    //         } else {
+    //             console.log(`no panorama found at location Lat: ${streetViewPanoramaRequest.location.lat} Lng: ${streetViewPanoramaRequest.location.lng}`)
+    //             // GetNewPanorama()
+    //             // no street view available in this range, or some error occurred
+    //         }
+    //     })
 
-    }, [googleMaps])
+    // }, [googleMaps])
 
     function createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions) {
         if(!googleMaps) return
