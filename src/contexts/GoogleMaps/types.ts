@@ -2,6 +2,11 @@
 // Street View Service
 //
 
+export interface LatLng {
+    lat(): number
+    lng(): number
+}
+
 export interface LatLngLiteral {
     lat: number
     lng: number
@@ -36,7 +41,7 @@ export interface StreetViewLink {
 export interface StreetViewLocation {
     pano: string
     description?: string
-    latLng: LatLngLiteral
+    latLng: LatLng | LatLngLiteral
     shortDescription?: string
 }
 
