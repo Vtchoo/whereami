@@ -54,6 +54,10 @@ code {
 
 /* Google maps requirements */
 
-#map {
+/* #map {
 	height: 100%;
+} */
+
+.gm-style a[href^="https://maps.google.com/maps"] {
+	pointer-events: none;
 }
