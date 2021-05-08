@@ -38,7 +38,7 @@ function Home(props: any) {
     
             const challenge: IChallengeConfiguration = {
                 locations: 5,
-                time: 3 * 60 * 1000,
+                time: 2 * 60,
             }
 
             alert('sending challenge data')
