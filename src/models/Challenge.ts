@@ -3,28 +3,44 @@ import { ILocation } from "./Location"
 
 interface IChallenge {
 
-    id?: number
-    uuid?: string
+    id: number
+    key: string
 
     time: number
 
-    createdBy?: number
-    createdAt?: Date
+    createdBy: number
+    createdAt: Date
     expiresAt?: Date
 
-    locations?: ILocation[] | number
+    locations: ILocation[]
+}
+
+interface IChallengeConfiguration {
+    time: number
+    locations: ILocation[] | number
 }
 
 class Challenge {
 
     static readonly route = 'challenges'
 
-    static async create(challenge: IChallenge) {
+    static async create(challenge: IChallengeConfiguration) {
 
         const { data } = await api.post(`/${this.route}`, challenge)
         return data
     }
+
+    static async findByKey(key: string, options?: { pregame?: boolean }) {
+
+        const query: { [key: string]: string } = {}
+        if(options?.pregame) query.pregame = '1'
+
+        const urlQuery = new URLSearchParams(query)
+
+        const { data } = await api.get(`/${this.route}/${key}?${urlQuery.toString()}`)
+        return data
+    }
 }
 
-export type { IChallenge }
+export type { IChallenge, IChallengeConfiguration }
 export { Challenge }

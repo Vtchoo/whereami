@@ -1,4 +1,18 @@
 //
+// Google Maps api types
+//
+
+
+//
+// Base object
+//
+
+interface MVCObject {
+    addListener(eventName: string, handler: Function): void
+}
+
+
+//
 // Street View Service
 //
 
@@ -124,9 +138,109 @@ export interface StreetViewPanoramaOptions {
     zoomControlOptions?: ZoomControlOptions
 }
 
-export interface StreetViewPanorama {
+export interface StreetViewPanorama extends MVCObject{
     setPano(pano: string): void
     setPosition(position: LatLngLiteral): void
+}
+
+//
+// Google Maps
+//
+
+export interface GoogleMap extends MVCObject{
+
+}
+
+export interface FullscreenControlOptions {
+
+}
+
+export interface MapTypeControlOptions {
+    
+}
+
+export interface PanControlOptions {
+
+}
+
+export interface MapRestriction {
+
+}
+
+export interface RotateControlOptions {
+
+}
+
+export interface ScaleControlOptions {
+
+}
+
+export interface StreetViewControlOptions {
+
+}
+
+export interface MapTypeStyle {
+
+}
+
+export interface ZoomControlOptions {
+
+}
+
+export interface MapMouseEvent {
+    domEvent: MouseEvent | TouchEvent | PointerEvent | KeyboardEvent | Event
+    latLng: LatLng
+}
+
+export interface MapOptions {
+    center?: { lat: number, lng: number }
+    zoom?: number
+    backgroundColor?: string
+    clickableIcons?: boolean
+    controlSize?: number
+    disableDefaultUI?: boolean
+    disableDoubleClickZoom?: boolean
+    draggableCursor?: string
+    draggingCursor?: string
+    fullscreenControl?: boolean
+    fullscreenControlOptions?: FullscreenControlOptions
+    gestureHandling?: 'cooperative' | 'greedy' | 'none' | 'auto'
+    heading?: number
+    keyboardShortcuts?: number
+    mapTypeControl?: boolean
+    mapTypeControlOptions?: MapTypeControlOptions
+    mapTypeId?: 'HYBRID' | 'ROADMAP' | 'TERRAIN' | 'SATELLITE' | string
+    maxZoom?: number
+    minZoom?: number
+    noClear?: boolean
+    panControl?: boolean
+    panControlOptions?: PanControlOptions
+    restriction?: MapRestriction
+    rotateControl?: boolean
+    rotateControlOptions?: RotateControlOptions
+    scaleControl?: boolean
+    scaleControlOptions?: ScaleControlOptions
+    scrollwheel?: boolean
+    streetView?: StreetViewPanorama
+    streetViewControl?: boolean
+    streetViewControlOptions?: StreetViewControlOptions
+    styles?: MapTypeStyle[]
+    tilt?: number
+    zoomControl?: boolean
+    zoomControlOptions?: ZoomControlOptions
+}
+
+// Marker 
+
+export interface Marker {
+    setMap(map: GoogleMap): void
+    setLabel(label: string): void
+    setPosition(latLng: LatLng | LatLngLiteral): void
+    setTitle(title: string): void
+}
+
+export interface MarkerOptions {
+
 }
 
 //
@@ -137,4 +251,6 @@ export interface GoogleMapsApi {
     StreetViewPanorama: new (container: HTMLElement, options?: StreetViewPanoramaOptions) => StreetViewPanorama
     StreetViewService: new () => StreetViewService
     StreetViewStatus: StreetViewStatus
+    Map: new (container: HTMLElement, options?: MapOptions) => GoogleMap
+    Marker: new (options?: MarkerOptions) => Marker
 }

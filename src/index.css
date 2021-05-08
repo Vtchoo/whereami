@@ -51,3 +51,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Google maps requirements */
+
+#map {
+	height: 100%;
+}

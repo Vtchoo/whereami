@@ -31,7 +31,7 @@ function ExternalRoute({ children, ...props }: { children?: ReactNode } & RouteP
  
     const { user, loggedIn, authenticating } = useAuth()
     
-    if (authenticating) return <Modal>Logging in</Modal>
+    // if (authenticating) return <Modal>Logging in</Modal>
     // const from = state?.from
 
     if (loggedIn) return <Redirect to={{ pathname: '/' }} />

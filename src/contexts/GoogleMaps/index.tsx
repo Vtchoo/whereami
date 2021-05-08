@@ -1,8 +1,9 @@
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService } from './types'
+import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent } from './types'
 
 interface GoogleMapsContextData {
     createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama | undefined
+    createMap(element: HTMLElement, options?: MapOptions): GoogleMap | undefined
     googleMapsLoaded: boolean
     getRandomPanorama(): Promise<StreetViewPanoramaData>
 }
@@ -48,6 +49,8 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     useEffect(() => {
         if (!googleMaps) return
         
+        // console.log(googleMaps)
+
         const streetViewService = new googleMaps.StreetViewService()
         setStreetViewService(streetViewService)
 
@@ -135,10 +138,20 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
         return streetView
     }
 
+    function createMap(element: HTMLElement, options?: MapOptions) {
+
+        // if (!googleMaps) return
+        if(!googleMaps) throw new Error('GoogleMaps not loaded')
+        
+        const map = new googleMaps.Map(element, options)
+        return map
+    }
+
     return (
         <GoogleMapsContext.Provider value={{
-            createStreetView,
             googleMapsLoaded: !!googleMaps,
+            createStreetView,
+            createMap,
             getRandomPanorama
         }}>
             {children}
@@ -146,29 +159,41 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     )
 }
 
+//
+// Street View Panorama
+//
+
 interface PanoramaProps extends HTMLAttributes<HTMLDivElement>{
     children?: ReactNode
     options: StreetViewPanoramaOptions
+    pano: string
 }
 
 
-function Panorama({ children, options, ...props }: PanoramaProps) {
-
-    const [streetView, setStreetView] = useState<StreetViewPanorama>()
-
+function Panorama({ children, options, pano, ...props }: PanoramaProps) {
+    
+    // Hooks
     const { createStreetView, googleMapsLoaded } = useGoogleMaps()
 
+    // Refs
     const ref = useRef<HTMLDivElement>(null)
+    
+    // State
+    const [streetView, setStreetView] = useState<StreetViewPanorama>()
 
     useEffect(() => {
 
-        if (!ref.current) return
+        if (!streetView) return
 
-        const streetView = createStreetView(ref.current, options)
+        // Add event listeners here
 
-        if(!streetView) return
+        // if (!ref.current) return
 
-        setStreetView(streetView)
+        // const streetView = createStreetView(ref.current, { ...options, pano })
+
+        // if(!streetView) return
+
+        // setStreetView(streetView)
         
         // if (this.props.googleMaps && this.streetView == null) {
 		// 	this.streetView = new this.props.googleMaps.StreetViewPanorama(
@@ -194,7 +219,19 @@ function Panorama({ children, options, ...props }: PanoramaProps) {
             
         //     this.props.pano(this.streetView)
 		// }
-    }, [googleMapsLoaded])
+    }, [googleMapsLoaded, streetView])
+
+    useEffect(() => {
+        if (!ref.current) return
+        
+        if (!streetView){
+            const streetView = createStreetView(ref.current, { ...options, pano })
+            return setStreetView(streetView)
+        } 
+            
+        streetView.setPano(pano)
+        
+    }, [googleMapsLoaded, pano])
 
     return (
         <div ref={ref} {...props}>
@@ -203,8 +240,57 @@ function Panorama({ children, options, ...props }: PanoramaProps) {
     )
 }
 
+//
+// Map
+//
+
+interface MapProps extends HTMLAttributes<HTMLDivElement>{
+    options?: MapOptions
+    onMapClick?: (event: MapMouseEvent) => void 
+}
+
+function Map({ options, onMapClick, ...props }: MapProps) {
+
+    // Hooks
+    const { googleMapsLoaded, createMap } = useGoogleMaps()
+
+    // Refs
+    const ref = useRef<HTMLDivElement>(null)
+
+    // State
+    const [map, setMap] = useState<GoogleMap>()
+
+    // Effects
+    useEffect(() => {
+
+        if (!ref.current) return
+        
+        if (!map) {
+            const newMap = createMap(ref.current, {
+                center: { lat: 0, lng: 0 },
+                zoom: 1,
+               ...options
+            })
+
+            setMap(newMap)
+
+            if(onMapClick)
+                newMap?.addListener('click', onMapClick)
+            // console.log(newMap)
+        }
+
+    }, [googleMapsLoaded])
+
+    return (
+        <div ref={ref} {...props}>
+
+        </div>
+    )
+
+}
+
 function useGoogleMaps() {
     return useContext(GoogleMapsContext)
 }
 
-export { useGoogleMaps, GoogleMapsProvider, Panorama }
+export { useGoogleMaps, GoogleMapsProvider, Panorama, Map }

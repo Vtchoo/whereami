@@ -1,17 +1,23 @@
 import { useState } from "react"
+import { useHistory } from "react-router"
 import { IPage } from ".."
 import { useGoogleMaps } from "../../contexts/GoogleMaps"
 import { StreetViewLocation } from "../../contexts/GoogleMaps/types"
-import { Challenge, IChallenge } from "../../models/Challenge"
+import { Challenge, IChallenge, IChallengeConfiguration } from "../../models/Challenge"
 import { ILocation } from "../../models/Location"
 
-function Home() {
+function Home(props: any) {
 
+
+    console.log(props)
     // Hooks
     const { getRandomPanorama } = useGoogleMaps()
+    const history = useHistory()
 
     // State
     const [panoramas, setPanoramas] = useState<StreetViewLocation[]>([])
+
+    const [challengeKey, setChallengeKey] = useState('')
 
     async function handleGetRandomPanorama() {
         
@@ -32,7 +38,7 @@ function Home() {
             //     // setPanoramas(panoramas => [...panoramas, panorama.location])
             // }
     
-            const challenge: IChallenge = {
+            const challenge: IChallengeConfiguration = {
                 locations: 5,
                 time: 3 * 60 * 1000,
             }
@@ -45,6 +51,10 @@ function Home() {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    function handlePlayChallenge() {
+        history.push(`/challenge/${challengeKey}`)
     }
 
     return (
@@ -60,11 +70,8 @@ function Home() {
             <h3>home</h3>
             <h3>home</h3>
             <button onClick={handleGetRandomPanorama}>Create challenge</button>
-            {panoramas.map((panorama, i) =>
-                <div key={i}>
-                    {panorama.pano}
-                </div>
-            )}
+            <input value={challengeKey} onChange={e => setChallengeKey(e.target.value)} />
+            <button onClick={handlePlayChallenge}>Play challenge</button>
         </div>
     )
 }
@@ -73,7 +80,7 @@ const PageHome: IPage = {
     name: 'Home',
     path: '/',
     exact: true,
-    component: Home
+    component: Home as () => JSX.Element
 }
 
 export { PageHome }
