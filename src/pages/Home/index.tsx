@@ -8,8 +8,6 @@ import { ILocation } from "../../models/Location"
 
 function Home(props: any) {
 
-
-    console.log(props)
     // Hooks
     const { getRandomPanorama } = useGoogleMaps()
     const history = useHistory()

@@ -8,9 +8,12 @@
 //
 
 interface MVCObject {
-    addListener(eventName: string, handler: Function): void
+    addListener(eventName: string, handler: Function): MapsEventListener
 }
 
+interface MapsEventListener {
+    remove(): void
+}
 
 //
 // Street View Service
@@ -151,6 +154,44 @@ export interface GoogleMap extends MVCObject{
 
 }
 
+export interface MapOptions {
+    center?: { lat: number, lng: number }
+    zoom?: number
+    backgroundColor?: string
+    clickableIcons?: boolean
+    controlSize?: number
+    disableDefaultUI?: boolean
+    disableDoubleClickZoom?: boolean
+    draggableCursor?: string
+    draggingCursor?: string
+    fullscreenControl?: boolean
+    fullscreenControlOptions?: FullscreenControlOptions
+    gestureHandling?: 'cooperative' | 'greedy' | 'none' | 'auto'
+    heading?: number
+    keyboardShortcuts?: number
+    mapTypeControl?: boolean
+    mapTypeControlOptions?: MapTypeControlOptions
+    mapTypeId?: 'HYBRID' | 'ROADMAP' | 'TERRAIN' | 'SATELLITE' | string
+    maxZoom?: number
+    minZoom?: number
+    noClear?: boolean
+    panControl?: boolean
+    panControlOptions?: PanControlOptions
+    restriction?: MapRestriction
+    rotateControl?: boolean
+    rotateControlOptions?: RotateControlOptions
+    scaleControl?: boolean
+    scaleControlOptions?: ScaleControlOptions
+    scrollwheel?: boolean
+    streetView?: StreetViewPanorama
+    streetViewControl?: boolean
+    streetViewControlOptions?: StreetViewControlOptions
+    styles?: MapTypeStyle[]
+    tilt?: number
+    zoomControl?: boolean
+    zoomControlOptions?: ZoomControlOptions
+}
+
 export interface FullscreenControlOptions {
 
 }
@@ -192,44 +233,6 @@ export interface MapMouseEvent {
     latLng: LatLng
 }
 
-export interface MapOptions {
-    center?: { lat: number, lng: number }
-    zoom?: number
-    backgroundColor?: string
-    clickableIcons?: boolean
-    controlSize?: number
-    disableDefaultUI?: boolean
-    disableDoubleClickZoom?: boolean
-    draggableCursor?: string
-    draggingCursor?: string
-    fullscreenControl?: boolean
-    fullscreenControlOptions?: FullscreenControlOptions
-    gestureHandling?: 'cooperative' | 'greedy' | 'none' | 'auto'
-    heading?: number
-    keyboardShortcuts?: number
-    mapTypeControl?: boolean
-    mapTypeControlOptions?: MapTypeControlOptions
-    mapTypeId?: 'HYBRID' | 'ROADMAP' | 'TERRAIN' | 'SATELLITE' | string
-    maxZoom?: number
-    minZoom?: number
-    noClear?: boolean
-    panControl?: boolean
-    panControlOptions?: PanControlOptions
-    restriction?: MapRestriction
-    rotateControl?: boolean
-    rotateControlOptions?: RotateControlOptions
-    scaleControl?: boolean
-    scaleControlOptions?: ScaleControlOptions
-    scrollwheel?: boolean
-    streetView?: StreetViewPanorama
-    streetViewControl?: boolean
-    streetViewControlOptions?: StreetViewControlOptions
-    styles?: MapTypeStyle[]
-    tilt?: number
-    zoomControl?: boolean
-    zoomControlOptions?: ZoomControlOptions
-}
-
 // Marker 
 
 export interface Marker {
@@ -240,7 +243,36 @@ export interface Marker {
 }
 
 export interface MarkerOptions {
+    position?: LatLng | LatLngLiteral
+    animation?: 'BOUNCE' | 'DROP'
+    map?: GoogleMap
 
+    clickable?: boolean
+    crossOnDrag?: boolean
+    cursor?: string
+    draggable?: boolean
+    icon?: string
+    label?: string | MarkerLabel
+    opacity?: number
+    optimized?: boolean
+    shape?: MarkerShape
+    title?: string
+    visible?: boolean
+    zIndex?: number
+}
+
+export interface MarkerLabel {
+    text: string
+    className?: string
+    color?: string
+    fontFamily?: string
+    fontSize?: string
+    fontWeight?: string
+}
+
+export interface MarkerShape {
+    coords: number[]
+    type: string
 }
 
 //

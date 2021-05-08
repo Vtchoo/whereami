@@ -1,9 +1,10 @@
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent } from './types'
+import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker } from './types'
 
 interface GoogleMapsContextData {
-    createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama | undefined
-    createMap(element: HTMLElement, options?: MapOptions): GoogleMap | undefined
+    createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama
+    createMap(element: HTMLElement, options?: MapOptions): GoogleMap
+    createMarker(map: GoogleMap, options?: MarkerOptions): Marker
     googleMapsLoaded: boolean
     getRandomPanorama(): Promise<StreetViewPanoramaData>
 }
@@ -132,7 +133,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     // }, [googleMaps])
 
     function createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions) {
-        if(!googleMaps) return
+        if (!googleMaps) throw new Error('GoogleMaps not loaded')
 
         const streetView = new googleMaps.StreetViewPanorama(element, options)
         return streetView
@@ -141,10 +142,17 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     function createMap(element: HTMLElement, options?: MapOptions) {
 
         // if (!googleMaps) return
-        if(!googleMaps) throw new Error('GoogleMaps not loaded')
+        if (!googleMaps) throw new Error('GoogleMaps not loaded')
         
         const map = new googleMaps.Map(element, options)
         return map
+    }
+
+    function createMarker(map: GoogleMap, options: MarkerOptions) {
+        if (!googleMaps) throw new Error('GoogleMaps not loaded')
+
+        const marker = new googleMaps.Marker({ ...options, map })
+        return marker
     }
 
     return (
@@ -152,6 +160,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             googleMapsLoaded: !!googleMaps,
             createStreetView,
             createMap,
+            createMarker,
             getRandomPanorama
         }}>
             {children}
@@ -247,9 +256,10 @@ function Panorama({ children, options, pano, ...props }: PanoramaProps) {
 interface MapProps extends HTMLAttributes<HTMLDivElement>{
     options?: MapOptions
     onMapClick?: (event: MapMouseEvent) => void 
+    onLoadMap?: (map: GoogleMap) => void
 }
 
-function Map({ options, onMapClick, ...props }: MapProps) {
+function Map({ options, onMapClick, onLoadMap, ...props }: MapProps) {
 
     // Hooks
     const { googleMapsLoaded, createMap } = useGoogleMaps()
@@ -274,12 +284,24 @@ function Map({ options, onMapClick, ...props }: MapProps) {
 
             setMap(newMap)
 
-            if(onMapClick)
-                newMap?.addListener('click', onMapClick)
-            // console.log(newMap)
+            onLoadMap?.(newMap)
+
+            if(onMapClick){
+                const listener = newMap?.addListener('click', onMapClick)
+                return () => listener.remove()
+            }// console.log(newMap)
         }
 
-    }, [googleMapsLoaded])
+    }, [googleMapsLoaded, onMapClick])
+
+    useEffect(() => {
+
+        if(onMapClick){
+            const listener = map?.addListener('click', onMapClick)
+            return () => listener?.remove()
+        }
+        
+    }, [onMapClick])
 
     return (
         <div ref={ref} {...props}>
