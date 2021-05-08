@@ -1,9 +1,10 @@
 import { ReactNode, useEffect, useState } from "react"
-import { BrowserRouter, Redirect, Route, RouteProps, Switch, useLocation } from "react-router-dom"
+import { BrowserRouter, Redirect, Route, RouteProps, Switch, useHistory, useLocation } from "react-router-dom"
 import Modal from '../components/Modal'
 import { useAuth } from '../contexts/AuthContext'
 import { Login } from '../pages/Login'
 import { SignUp } from "../pages/SignUp"
+import RouterUtils from "../utils/RouterUtils"
 import { InternalNavigation } from "./internal"
 // import Signin from "../../pages/Signin"
 // import InternalNavigation from "../Internal"
@@ -31,10 +32,14 @@ function ExternalRoute({ children, ...props }: { children?: ReactNode } & RouteP
  
     const { user, loggedIn, authenticating } = useAuth()
     
+    const { search } = useLocation()
+
+    const from = RouterUtils.parseQuery(search).from
+    
     // if (authenticating) return <Modal>Logging in</Modal>
     // const from = state?.from
 
-    if (loggedIn) return <Redirect to={{ pathname: '/' }} />
+    if (loggedIn) return <Redirect to={{ pathname: from ?? '/' }} />
 
     return (
         <Route {...props}>
