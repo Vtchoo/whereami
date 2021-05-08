@@ -51,15 +51,25 @@ function ChallengePage() {
 
         const { latLng } = event
         
-        if (marker) {
-            marker.setPosition(latLng)
-            return
-        }
+        if (marker) return marker.setPosition(latLng)
 
         const newMarker = createMarker(map, { position: latLng, draggable: true, animation: 'DROP' })
         setMarker(newMarker)
+    }
 
-        console.log(newMarker)
+    function handleSubmitGuess() {
+
+        if (!marker) return
+        
+        marker.setDraggable(false)
+
+
+
+
+    }
+
+    function handleSkip() {
+
     }
 
     return (
@@ -71,19 +81,19 @@ function ChallengePage() {
             </div>
             {panorama &&
                 <Panorama
-                className={style.streetViewPanorama}
-                pano={panorama}
-                options={{
-                    addressControl: false,
-                    showRoadLabels: false,
-                    fullscreenControl: false,
-                    zoomControlOptions: {
-                        position: 6
-                    },
-                    panControlOptions: {
-                        position: 6
-                    }
-                }}>
+                    className={style.streetViewPanorama}
+                    pano={panorama}
+                    options={{
+                        addressControl: false,
+                        showRoadLabels: false,
+                        fullscreenControl: false,
+                        zoomControlOptions: {
+                            position: 6
+                        },
+                        panControlOptions: {
+                            position: 6
+                        }
+                    }}>
                     <div className={style.minimapContainer}>
                         <Map
                             className={style.minimap}
@@ -98,8 +108,11 @@ function ChallengePage() {
                             onLoadMap={map => setMap(map)}
                             onMapClick={handleMapClick}
                         />
-                        <button>
-                            Make guess
+                        <button
+                            className={style.guessButton}
+                            onClick={marker ? handleSubmitGuess : handleSkip}
+                        >
+                            {marker ? 'Submit guess' : 'Skip'}
                         </button>
                     </div>
                     {/* <Map

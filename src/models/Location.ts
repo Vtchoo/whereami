@@ -2,11 +2,16 @@ interface ILocation {
     id?: number
 
     pano: string
-    lat?: number
-    lng?: number
+    lat: number
+    lng: number
 
     description?: string
     shortdescription?: string
 }
 
-export type { ILocation }
+interface IHiddenLocation {
+    id: number
+    pano: string
+}
+
+export type { ILocation, IHiddenLocation }

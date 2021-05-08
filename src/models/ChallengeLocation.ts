@@ -1,5 +1,5 @@
 import { IChallenge } from "./Challenge";
-import { ILocation } from "./Location";
+import { IHiddenLocation, ILocation } from "./Location";
 
 interface IChallengeLocation {
 
@@ -9,7 +9,14 @@ interface IChallengeLocation {
     locationId?: number
 
     challenge?: IChallenge
-    location: ILocation
+    location: ILocation | IHiddenLocation
+}
+
+class ChallengeLocation {
+
+    static readonly route = 'challengelocations'
+
 }
 
 export type { IChallengeLocation }
+export { ChallengeLocation }

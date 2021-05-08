@@ -1,5 +1,6 @@
 import api from "../services/api"
 import { IChallengeLocation } from "./ChallengeLocation"
+import { IGuess } from "./Guess"
 import { ILocation } from "./Location"
 
 interface IChallenge {
@@ -40,6 +41,12 @@ class Challenge {
         const urlQuery = new URLSearchParams(query)
 
         const { data } = await api.get(`/${this.route}/${key}?${urlQuery.toString()}`)
+        return data
+    }
+
+    static async submitGuess(challengeKey: string, challengeLocationId: number, guess: IGuess) {
+
+        const { data } = await api.post(`/${this.route}/${challengeKey}/challengelocations/${challengeLocationId}/guesses`)
         return data
     }
 }
