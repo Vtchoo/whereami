@@ -3,7 +3,7 @@ import { IHiddenLocation, ILocation } from "./Location";
 
 interface IChallengeLocation {
 
-    id?: number
+    id: number
 
     challengeId?: number
     locationId?: number

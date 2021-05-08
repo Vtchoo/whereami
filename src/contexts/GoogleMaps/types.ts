@@ -262,6 +262,7 @@ export interface Marker {
     setPosition(latLng: LatLng | LatLngLiteral): void
     setTitle(title: string): void
     setDraggable(flag: boolean): void
+    getPosition(): LatLng
 }
 
 export interface MarkerOptions {

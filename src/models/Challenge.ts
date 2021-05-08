@@ -46,7 +46,7 @@ class Challenge {
 
     static async submitGuess(challengeKey: string, challengeLocationId: number, guess: IGuess) {
 
-        const { data } = await api.post(`/${this.route}/${challengeKey}/challengelocations/${challengeLocationId}/guesses`)
+        const { data } = await api.post(`/${this.route}/${challengeKey}/challengelocations/${challengeLocationId}/guesses`, guess)
         return data
     }
 }

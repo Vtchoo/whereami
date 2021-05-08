@@ -5,7 +5,7 @@ interface IGuess {
 
     id?: number
 
-    challengelocationId: number
+    challengeLocationId?: number
 
     lat?: number
     lng?: number
