@@ -32,6 +32,12 @@ export interface LatLngLiteral {
 export interface StreetViewLocationRequest {
     location?: LatLngLiteral
     radius?: number
+    source?: keyof StreetViewSource
+}
+
+export interface StreetViewSource {
+    'OUTDOOR': 'OUTDOOR'
+    'DEFAULT': 'DEFAULT'
 }
 
 export interface StreetViewPanoRequest {
@@ -102,7 +108,7 @@ export interface MotionTrackingControlOptions {
 }
 
 export interface PanControlOptions {
-    
+    position?: keyof ControlPosition | number
 }
 
 export interface StreetViewPov {
@@ -110,7 +116,22 @@ export interface StreetViewPov {
 }
 
 export interface ZoomControlOptions {
+    position?: keyof ControlPosition | number
+}
 
+export interface ControlPosition {
+    'BOTTOM_CENTER': 11
+    'BOTTOM_LEFT': 10
+    'BOTTOM_RIGHT': 12
+    'LEFT_BOTTOM': 6
+    'LEFT_CENTER': 4
+    'LEFT_TOP': 5
+    'RIGHT_BOTTOM': 9
+    'RIGHT_CENTER': 8
+    'RIGHT_TOP': 7
+    'TOP_CENTER': 2
+    'TOP_LEFT': 1
+    'TOP_RIGHT': 3
 }
 
 export interface StreetViewPanoramaOptions {
@@ -121,8 +142,8 @@ export interface StreetViewPanoramaOptions {
     disableDefaultUI?: boolean
     disableDoubleClickZoom?: boolean
     enableCloseButton?: boolean
-    fullScreenControl?: boolean
-    fullScreenControlOptions?: FullscreenControlOptions
+    fullscreenControl?: boolean
+    fullscreenControlOptions?: FullscreenControlOptions
     imageDateControl?: boolean
     linksControl?: boolean
     motionTracking?: boolean
@@ -285,4 +306,6 @@ export interface GoogleMapsApi {
     StreetViewStatus: StreetViewStatus
     Map: new (container: HTMLElement, options?: MapOptions) => GoogleMap
     Marker: new (options?: MarkerOptions) => Marker
+    StreetViewSource: StreetViewSource
+    ControlPosition: ControlPosition
 }
