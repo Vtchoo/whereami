@@ -5,6 +5,8 @@ import { Panorama, Map, useGoogleMaps } from "../../contexts/GoogleMaps"
 import { GoogleMap, MapMouseEvent, Marker } from "../../contexts/GoogleMaps/types"
 import { Challenge, IChallenge } from "../../models/Challenge"
 
+import style from './style.module.css'
+
 function ChallengePage() {
 
     const { key } = useParams<{ key: string }>()
@@ -36,7 +38,7 @@ function ChallengePage() {
 
         if (!challenge) return
 
-        const locations = challenge.locations.map(location => location.pano)
+        const locations = challenge.challengeLocations.map(challengeLocation => challengeLocation.location.pano)
         
         const nextPanorama = locations[panorama ? locations.indexOf(panorama) + 1 : 0]
 
@@ -68,19 +70,51 @@ function ChallengePage() {
 
             </div>
             {panorama &&
-                <Panorama pano={panorama} style={{ width: '100%', height: '100%' }} options={{ addressControl: false, showRoadLabels: false }}>
-                <Map
-                    style={{ width: '400px', height: '200px', position: 'absolute', zIndex: 2 }}
-                    options={{
-                        clickableIcons: false,
-                        fullscreenControl: false,
-                        streetViewControl: false,
-                        mapTypeControl: false,
-                        zoomControl: false
-                    }}
-                    onLoadMap={map => setMap(map)}
-                    onMapClick={handleMapClick}
-                />
+                <Panorama
+                className={style.streetViewPanorama}
+                pano={panorama}
+                options={{
+                    addressControl: false,
+                    showRoadLabels: false,
+                    fullscreenControl: false,
+                    zoomControlOptions: {
+                        position: 6
+                    },
+                    panControlOptions: {
+                        position: 6
+                    }
+                }}>
+                    <div className={style.minimapContainer}>
+                        <Map
+                            className={style.minimap}
+                            // style={{ width: '400px', height: '200px', position: 'absolute', zIndex: 2}}
+                            options={{
+                                clickableIcons: false,
+                                fullscreenControl: false,
+                                streetViewControl: false,
+                                mapTypeControl: false,
+                                zoomControl: false
+                            }}
+                            onLoadMap={map => setMap(map)}
+                            onMapClick={handleMapClick}
+                        />
+                        <button>
+                            Make guess
+                        </button>
+                    </div>
+                    {/* <Map
+                        className={style.minimap}
+                        // style={{ width: '400px', height: '200px', position: 'absolute', zIndex: 2}}
+                        options={{
+                            clickableIcons: false,
+                            fullscreenControl: false,
+                            streetViewControl: false,
+                            mapTypeControl: false,
+                            zoomControl: false
+                        }}
+                        onLoadMap={map => setMap(map)}
+                        onMapClick={handleMapClick}
+                    /> */}
                 </Panorama>
             }
         </div>
