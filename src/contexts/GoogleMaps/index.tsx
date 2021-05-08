@@ -50,7 +50,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
     useEffect(() => {
         if (!googleMaps) return
         
-        // console.log(googleMaps)
+        // console.log(googleMaps.ControlPosition)
 
         const streetViewService = new googleMaps.StreetViewService()
         setStreetViewService(streetViewService)
@@ -72,6 +72,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             const StreetViewLocationRequest = {
                 location: position,
                 radius: STREETVIEW_MAX_DISTANCE,
+                source: googleMaps?.StreetViewSource.OUTDOOR
             }
 
             streetViewService.getPanorama(StreetViewLocationRequest, async (data, status) => {
