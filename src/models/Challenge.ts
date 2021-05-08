@@ -1,4 +1,5 @@
 import api from "../services/api"
+import { IChallengeLocation } from "./ChallengeLocation"
 import { ILocation } from "./Location"
 
 interface IChallenge {
@@ -12,12 +13,13 @@ interface IChallenge {
     createdAt: Date
     expiresAt?: Date
 
-    locations: ILocation[]
+    challengeLocations: IChallengeLocation[]
 }
 
 interface IChallengeConfiguration {
     time: number
     locations: ILocation[] | number
+    region?: number
 }
 
 class Challenge {
