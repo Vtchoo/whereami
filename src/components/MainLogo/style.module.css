@@ -1,0 +1,20 @@
+
+.AppLogo.float {
+    padding: 10px;
+    animation: App-logo-float infinite 5s ease-in-out;
+    /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6); */
+    /* border-radius: 50%; */
+    /* animation: App-logo-spin infinite 15s ease-in-out; */
+}
+
+@keyframes App-logo-float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}

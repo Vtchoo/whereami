@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router"
 import { IPage } from ".."
+import MainLogo from "../../components/MainLogo"
 import { Panorama, Map, useGoogleMaps } from "../../contexts/GoogleMaps"
 import { GoogleMap, MapMouseEvent, Marker } from "../../contexts/GoogleMaps/types"
 import { Challenge, IChallenge } from "../../models/Challenge"
@@ -119,16 +120,23 @@ function ChallengePage() {
     if (timer === undefined) return (
         <div className={style.container}>
             <div className={style.newChallengeCard}>
+                <MainLogo className={style.logo}/>
                 <h1>New challenge!</h1>
                 <small>{challenge?.key}</small>
                 <div className={style.infoCard}>
                     <div>
-                        <strong>{challenge.challengeLocations.length}</strong>
-                        <span>rounds</span>
+                        <strong>{challenge.region?.name || 'World'}</strong>
+                        <small>region</small>
                     </div>
+                    <hr/>
+                    <div>
+                        <strong>{challenge.challengeLocations.length}</strong>
+                        <small>rounds</small>
+                    </div>
+                    <hr/>
                     <div>
                         <strong>{challenge.time}</strong>
-                        <span>seconds</span>
+                        <small>seconds</small>
                     </div>
                 </div>
                 <button className={style.button}>Start challenge!</button>
