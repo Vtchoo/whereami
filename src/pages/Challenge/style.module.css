@@ -134,7 +134,7 @@
     width: 100%;
     height: 100%;
     z-index: 2;
-    background-color: darkkhaki;
+    background-color: white;
 
     display: flex;
     flex-direction: column;
@@ -151,4 +151,28 @@
     align-items: center;
     justify-content: space-evenly;
     height: 40%;
+}
+
+.playerResult {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    /* background-color: cyan; */
+    align-items: center;
+    gap: .5rem;
+}
+
+.scoreBar {
+    width: 100%;
+    height: 30px;
+    align-self: stretch;
+
+    border: 1px solid var(--primary-dark);
+    border-radius: 10000px;
+    overflow: hidden;
+}
+
+.scoreBar > div {
+    height: 100%;
+    background-color: var(--primary-light);
 }

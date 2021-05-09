@@ -1,0 +1,43 @@
+.container {
+
+    display: flex;
+    flex-direction: column;
+
+    /* min-width: 350px; */
+    width: 100%;
+    max-width: 400px;
+
+    padding: 1rem;
+    border-radius: 1rem;
+    gap: 1rem;
+
+    background-color: var(--white);
+    color: var(--primary-dark);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.container hr {
+    color: var(--bordergrey);
+}
+
+.text {
+    padding: 1rem 0;
+}
+
+.buttons {
+    display: flex;
+    gap: .5rem;
+}
+
+.button {
+    flex: 1;
+}

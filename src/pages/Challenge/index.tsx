@@ -1,9 +1,12 @@
+import userEvent from "@testing-library/user-event"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory, useLocation, useParams } from "react-router"
 import { IPage } from ".."
 import MainLogo from "../../components/MainLogo"
+import { useAuth } from "../../contexts/AuthContext"
 import { Panorama, Map, useGoogleMaps } from "../../contexts/GoogleMaps"
 import { GoogleMap, MapMouseEvent, Marker, Polyline } from "../../contexts/GoogleMaps/types"
+import { Game } from "../../game"
 import { Challenge, IChallenge } from "../../models/Challenge"
 import { ChallengeLocation, IChallengeLocation } from "../../models/ChallengeLocation"
 import { Guess, IGuess } from "../../models/Guess"
@@ -15,6 +18,7 @@ function ChallengePage() {
     // Hooks
     const { key } = useParams<{ key: string }>()
     const history = useHistory()
+    const { user } = useAuth()
     const { createMarker, createPolyline } = useGoogleMaps()
 
     // Pregame
@@ -30,6 +34,7 @@ function ChallengePage() {
 
     // Results
     const [showingResults, setShowingResults] = useState(false)
+    const [results, setResults] = useState<IChallengeLocation>()
     const [markers, setMarkers] = useState<Marker[]>([])
     const [lines, setLines] = useState<Polyline[]>([])
 
@@ -81,6 +86,7 @@ function ChallengePage() {
             setMarkers([])
             lines.forEach(line => line.setMap(null))
             setLines([])
+            setResults(undefined)
         }
 
     }, [showingResults])
@@ -205,6 +211,7 @@ function ChallengePage() {
                 })
             })
 
+            setResults({ guesses, location, ...challengeLocation })
             setMarkers([locationMarker, ...guessMarkers])
             setLines(lines)
 
@@ -276,6 +283,104 @@ function ChallengePage() {
 
     const isFinalRound = currentLocation && challenge.challengeLocations.indexOf(currentLocation) === challenge.challengeLocations.length - 1
 
+
+
+    const renderGameControls = () => {
+        return (
+            <>
+                <div className={style.infoContainer}>
+                    <div>
+                        <strong>{challenge.region?.name || 'World'}</strong>
+                    </div>
+                    <hr />
+                    <div>
+                        <strong>{challenge.challengeLocations.indexOf(currentLocation as IChallengeLocation) + 1}/{challenge.challengeLocations.length}</strong>
+                        <small>round</small>
+                    </div>
+                    <hr />
+                    <div>
+                        <strong className={`${style.timerText} ${timer <= 30 ? style.outOfTime : ''}`}>{minutes}:{seconds}</strong>
+                        <small>{timer > 30 ? 'time left' : 'Hurry up!'}</small>
+                                
+                        {/*<small>time</small>*/}
+                    </div>
+                </div>
+                <div className={style.minimapContainer}>
+                    <Map
+                        className={style.minimap}
+                        // style={{ width: '400px', height: '200px', position: 'absolute', zIndex: 2}}
+                        options={{
+                            clickableIcons: false,
+                            fullscreenControl: false,
+                            streetViewControl: false,
+                            mapTypeControl: false,
+                            zoomControl: false
+                        }}
+                        onLoadMap={map => setMap(map)}
+                        onMapClick={handleMapClick}
+                    />
+                    <button
+                        className={style.button}
+                        onClick={handleFinishRound}
+                        disabled={submitting}
+                    >
+                        {marker ? 'Submit guess' : 'Skip'}
+                    </button>
+                </div>
+            </>
+        )
+    }
+
+    const renderRoundResults = () => {
+
+        const playerGuess = results?.guesses?.find(guess => guess.guessedBy === user?.id)
+        const actualLocation = results?.location
+
+        const maxScore = 1000
+        const playerScore = Game.calculateScore(
+            { lat: playerGuess?.lat, lng: playerGuess?.lng },
+            { lat: actualLocation?.lat, lng: actualLocation?.lng },
+            'EXPONENTIAL',
+            maxScore,
+            2000
+        )
+
+        return (
+            <div className={style.resultsContainer}>
+                <Map
+                    className={style.resultMap}
+                    onLoadMap={map => {
+                        console.log('1'); setMap(map)
+                    }}
+                    options={{
+                        clickableIcons: false,
+                        fullscreenControl: false,
+                        streetViewControl: false,
+                        mapTypeControl: false,
+                        zoomControl: false
+                    }}
+                />
+                <div className={style.roundResults}>
+
+                    <div className={style.playerResult}>
+                        <h2>Your score:</h2>
+                        <h1>{Math.ceil(playerScore)} points</h1>
+                        <div className={style.scoreBar}>
+                            <div style={{ width: `${Math.ceil(playerScore / maxScore * 100)}%` }}/>
+                        </div>
+                    </div>
+
+                    <button className={style.button} onClick={isFinalRound ? () => history.push(`/challenge/${key}/results`) : nextPanorama}>
+                        {isFinalRound ?
+                            'View results' :
+                            'Next round'
+                        }
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={style.container}>
             {currentLocation &&
@@ -294,72 +399,9 @@ function ChallengePage() {
                         }
                     }}>
                     {!showingResults ?
-                        <>
-                            <div className={style.infoContainer}>
-                                <div>
-                                    <strong>{challenge.region?.name || 'World'}</strong>
-                                </div>
-                                <hr />
-                                <div>
-                                    <strong>{challenge.challengeLocations.indexOf(currentLocation) + 1}/{challenge.challengeLocations.length}</strong>
-                                    <small>round</small>
-                                </div>
-                                <hr />
-                                <div>
-                                        <strong className={`${style.timerText} ${timer <= 30 ? style.outOfTime : ''}`}>{minutes}:{seconds}</strong>
-                                        <small>{timer > 30 ? 'time left' : 'Hurry up!'}</small>
-                                
-                                    {/*<small>time</small>*/}
-                                </div>
-                            </div>
-                            <div className={style.minimapContainer}>
-                                <Map
-                                    className={style.minimap}
-                                    // style={{ width: '400px', height: '200px', position: 'absolute', zIndex: 2}}
-                                    options={{
-                                        clickableIcons: false,
-                                        fullscreenControl: false,
-                                        streetViewControl: false,
-                                        mapTypeControl: false,
-                                        zoomControl: false
-                                    }}
-                                    onLoadMap={map => setMap(map)}
-                                    onMapClick={handleMapClick}
-                                />
-                                <button
-                                    className={style.button}
-                                    onClick={handleFinishRound}
-                                    disabled={submitting}
-                                >
-                                    {marker ? 'Submit guess' : 'Skip'}
-                                </button>
-                            </div>
-                        </>
+                        renderGameControls()
                         :
-                        <div className={style.resultsContainer}>
-                            <Map
-                                className={style.resultMap}
-                                onLoadMap={map => {
-                                    console.log('1'); setMap(map)
-                                }}
-                                options={{
-                                    clickableIcons: false,
-                                    fullscreenControl: false,
-                                    streetViewControl: false,
-                                    mapTypeControl: false,
-                                    zoomControl: false
-                                }}
-                            />
-                            <div className={style.roundResults}>
-                                
-                                <button className={style.button} onClick={isFinalRound ? () => history.push(`/challenge/${key}/results`) : nextPanorama}>
-                                    {isFinalRound ?
-                                        'View results' :
-                                        'Next round'
-                                    }
-                                </button>
-                            </div>
-                        </div>
+                        renderRoundResults()
                     }
                 </Panorama>
             }

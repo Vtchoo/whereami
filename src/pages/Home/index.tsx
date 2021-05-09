@@ -5,6 +5,7 @@ import { useGoogleMaps } from "../../contexts/GoogleMaps"
 import { StreetViewLocation } from "../../contexts/GoogleMaps/types"
 import { Challenge, IChallenge, IChallengeConfiguration } from "../../models/Challenge"
 import { ILocation } from "../../models/Location"
+import style from './style.module.css'
 
 function Home(props: any) {
 
@@ -56,20 +57,34 @@ function Home(props: any) {
     }
 
     return (
-        <div>
-            <h1>Home</h1>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <h3>home</h3>
-            <button onClick={handleGetRandomPanorama}>Create challenge</button>
-            <input value={challengeKey} onChange={e => setChallengeKey(e.target.value)} />
-            <button onClick={handlePlayChallenge}>Play challenge</button>
+        <div className={style.container}>
+            <div className={`${style.challengeCard} ${style.horizontal}`}>
+                <div className={style.content} style={{ flex: 1 }}>
+                    <h2>Start new challenge!</h2>
+                    <p>Create new random challenge from anywhere in the world</p>
+                </div>
+                <hr/>
+                <div style={{ display: "flex", flexDirection: "column", gap: '1rem' }}>
+                    <h3>Create challenge</h3>
+                    <button className={`${style.button} ${style.primary}`}>New places</button>
+                    <button className={`${style.button} ${style.secondary}`}>Explored locations</button>
+                </div>
+            </div>
+
+            <div className={`${style.challengeCard} ${style.horizonal}`}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                    <div>
+                        <h2>Play existing challenge</h2>
+                        <p>Play with your friends (or enemies)</p>
+                    </div>
+                    <div className={style.inlineContainer}>
+                        <span>Insert the game code here:</span>
+                        <input className={style.challengeInput} value={challengeKey} onChange={e => setChallengeKey(e.target.value)} />
+                        <button className={`${style.button} ${style.primary}`} onClick={handlePlayChallenge}>Play challenge</button>
+                    </div>
+                </div>  
+            </div>
+                
         </div>
     )
 }
