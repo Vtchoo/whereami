@@ -26,6 +26,13 @@ class User {
 		const { data } = await api.get<IUser[]>(`/${User.route}${query}`)
 		return data
 	}
+	static async findByIds(ids: number[]) {
+
+		let query = new URLSearchParams({ ids: ids.toString() }).toString()
+
+		const { data } = await api.get<IUser[]>(`/${User.route}?${query}`)
+		return data
+	}
 	
 	static async create(user: IUser) {
 

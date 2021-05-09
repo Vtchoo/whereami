@@ -1,0 +1,58 @@
+.container {
+    padding: 2rem;
+
+    gap: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.resultsMap {
+    width: 100%;
+    height: 60vh;
+}
+
+.usersList {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: .5rem;
+}
+
+.userInfo {
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem;
+    background-color: white;
+    border-radius: .5rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+}
+
+.button {
+    padding: .5rem;
+    border-radius: 1rem;
+    font-family: inherit;
+    border: none;
+
+    cursor: pointer;
+}
+
+.button:hover {
+    filter: brightness(.9);
+}
+
+.button:active {
+    filter: brightness(.8);
+}
+
+.button.primary {
+    background-color: var(--primary-light);
+    color: var(--white);
+}
+
+.button.secondary {
+    background-color: var(--white);
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-dark);
+}

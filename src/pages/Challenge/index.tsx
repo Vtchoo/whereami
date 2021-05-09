@@ -340,21 +340,16 @@ function ChallengePage() {
         const actualLocation = results?.location
 
         const maxScore = 1000
-        const playerScore = Game.calculateScore(
+        const playerScore = Game.getScore(
             { lat: playerGuess?.lat, lng: playerGuess?.lng },
-            { lat: actualLocation?.lat, lng: actualLocation?.lng },
-            'EXPONENTIAL',
-            maxScore,
-            2000
+            { lat: actualLocation?.lat, lng: actualLocation?.lng }
         )
 
         return (
             <div className={style.resultsContainer}>
                 <Map
                     className={style.resultMap}
-                    onLoadMap={map => {
-                        console.log('1'); setMap(map)
-                    }}
+                    onLoadMap={map => setMap(map)}
                     options={{
                         clickableIcons: false,
                         fullscreenControl: false,

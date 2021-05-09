@@ -27,6 +27,12 @@ interface IChallengeConfiguration {
     region?: number
 }
 
+interface ChallengeRequestOptions {
+    pregame?: boolean
+    showGuesses?: boolean
+    showGuessUser?: boolean
+}
+
 class Challenge {
 
     static readonly route = 'challenges'
@@ -37,14 +43,16 @@ class Challenge {
         return data
     }
 
-    static async findByKey(key: string, options?: { pregame?: boolean }) {
+    static async findByKey(key: string, options?: ChallengeRequestOptions) {
 
         const query: { [key: string]: string } = {}
-        if(options?.pregame) query.pregame = '1'
+        if (options?.pregame) query.pregame = '1'
+        if (options?.showGuesses) query.guesses = '1'
+        if(options?.showGuessUser) query.guessuser = '1'
 
         const urlQuery = new URLSearchParams(query)
 
-        const { data } = await api.get(`/${this.route}/${key}?${urlQuery.toString()}`)
+        const { data } = await api.get<IChallenge>(`/${this.route}/${key}?${urlQuery.toString()}`)
         return data
     }
 

@@ -9,6 +9,18 @@ type Formula = 'INVERSE_QUADRATIC' | 'QUADRATIC' | 'EXPONENTIAL' | 'GAUSS' | 'LI
 
 class Game {
 
+    static getScore(playerGuess: Coordinates, actualPlace: Coordinates) {
+
+        const maxScore = 1000
+
+        return Game.calculateScore({ lat: playerGuess?.lat, lng: playerGuess?.lng },
+            { lat: actualPlace?.lat, lng: actualPlace?.lng },
+            'EXPONENTIAL',
+            maxScore,
+            2000
+        )
+    }
+
     static calculateScore(playerGuess: Coordinates, actualPlace: Coordinates, scoreFormula: Formula, baseScore = 10000, referenceDistance = 1000) {
 
         if (!playerGuess.lat || !playerGuess.lng || !actualPlace.lat || !actualPlace.lng)

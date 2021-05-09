@@ -1,4 +1,5 @@
 import { PageChallenge } from "./Challenge"
+import { PageChallengeResults } from "./ChallengeResults"
 import { PageHome } from "./Home"
 
 interface IPage {
@@ -22,6 +23,7 @@ interface ISection {
 const pages: IPage[] = [
     PageHome,
     PageChallenge,
+    PageChallengeResults,
 ]
 
 export { pages }
