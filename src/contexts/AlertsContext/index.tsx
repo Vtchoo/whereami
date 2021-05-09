@@ -40,7 +40,7 @@ const testToasts: IToast[] = [
     { type: 'info', text: 'Toast without title', id: uuid() }
 ]
 
-function ToastProvider({ children, position = 'top', ...props }: ToastProviderProps) {
+function AlertsProvider({ children, position = 'top', ...props }: ToastProviderProps) {
 
     //
     // Defaults
@@ -146,4 +146,4 @@ function useAlerts() {
     return useContext(ToastContext)
 }
 
-export { ToastProvider, useAlerts }
+export { AlertsProvider, useAlerts }

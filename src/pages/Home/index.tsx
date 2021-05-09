@@ -1,29 +1,66 @@
 import { useState } from "react"
 import { useHistory } from "react-router"
 import { IPage } from ".."
+import { useAlerts } from "../../contexts/AlertsContext"
 import { useGoogleMaps } from "../../contexts/GoogleMaps"
-import { StreetViewLocation } from "../../contexts/GoogleMaps/types"
+import { StreetViewLocation, StreetViewPanorama, StreetViewPanoramaData } from "../../contexts/GoogleMaps/types"
 import { Challenge, IChallenge, IChallengeConfiguration } from "../../models/Challenge"
+import { IChallengeLocation } from "../../models/ChallengeLocation"
 import { ILocation } from "../../models/Location"
 import style from './style.module.css'
 
 function Home(props: any) {
 
     // Hooks
-    const { getRandomPanorama } = useGoogleMaps()
+    const { addAlert } = useAlerts()
     const history = useHistory()
+    const { getRandomPanorama } = useGoogleMaps()
 
     // State
-    const [panoramas, setPanoramas] = useState<StreetViewLocation[]>([])
+    const [showNewChallengeModal, setShowChallengeModal] = useState(false)
+
+    const [creatingChallengeFromExisting, setCreatingChallengeFromExisting] = useState(false)
+
+    const [creatingChallengeFromNew, setCreatingChallengeFromNew] = useState(false)
+    const [totalLocations, setTotalLocations] = useState(5)
+    const [foundLocations, setFoundLocations] = useState<StreetViewPanoramaData[]>([])
+
+    const [challenge, setChallente] = useState<IChallenge>()
 
     const [challengeKey, setChallengeKey] = useState('')
 
-    async function handleGetRandomPanorama() {
+    async function handleCreateFromExisting() {
+
+        setCreatingChallengeFromExisting(true)
         
         try {
+            
+            const challenge: IChallengeConfiguration = {
+                locations: 5,
+                time: 2 * 60
+            }
+            
+            const result = await Challenge.create(challenge)
+            
+            addAlert(`New challenge created successfully! Use this code to share with your friends:\n${result.key}`, { title: 'New Challenge!' })
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+        setCreatingChallengeFromExisting(false)
+    }
+
+    async function handleCreateFromNew() {
+        
+        setCreatingChallengeFromNew(true)
+
+        try {
             const locations: ILocation[] = []
-            for (let i = 0; i < 5; i++) {
-                const { location, ...panorama } = await getRandomPanorama()
+            for (let i = 0; i < totalLocations; i++) {
+                
+                const pano = await getRandomPanorama()
+                const { location, ...panorama } = pano
 
                 console.log('panorama found:', { location, ...panorama })
 
@@ -34,6 +71,8 @@ function Home(props: any) {
                     description: location.description,
                     shortdescription: location.description
                 })
+
+                setFoundLocations(oldLocations => [...oldLocations, pano])
                 // setPanoramas(panoramas => [...panoramas, panorama.location])
             }
     
@@ -42,14 +81,17 @@ function Home(props: any) {
                 time: 2 * 60,
             }
 
-            alert('sending challenge data')
-
             const result = await Challenge.create(challenge)
+            
+            addAlert(`New challenge created successfully! Use this code to share with your friends:\n${result.key}`, { title: 'New Challenge!' })
             
             console.log(result)
         } catch (error) {
             console.log(error)
         }
+
+        setFoundLocations([])
+        setCreatingChallengeFromNew(false)
     }
 
     function handlePlayChallenge() {
@@ -66,8 +108,20 @@ function Home(props: any) {
                 <hr/>
                 <div style={{ display: "flex", flexDirection: "column", gap: '1rem' }}>
                     <h3>Create challenge</h3>
-                    <button className={`${style.button} ${style.primary}`}>New places</button>
-                    <button className={`${style.button} ${style.secondary}`}>Explored locations</button>
+                    <button
+                        className={`${style.button} ${style.primary}`}
+                        disabled={creatingChallengeFromNew}
+                        onClick={handleCreateFromNew}
+                    >
+                        {creatingChallengeFromNew ? `${foundLocations.length}/${totalLocations} places found` : `New places` }
+                    </button>
+                    <button
+                        className={`${style.button} ${style.secondary}`}
+                        onClick={handleCreateFromExisting}
+                        disabled={creatingChallengeFromExisting}
+                    >
+                        Explored locations
+                    </button>
                 </div>
             </div>
 
@@ -85,6 +139,7 @@ function Home(props: any) {
                 </div>  
             </div>
                 
+            
         </div>
     )
 }

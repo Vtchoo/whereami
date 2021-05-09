@@ -33,7 +33,7 @@ class Challenge {
 
     static async create(challenge: IChallengeConfiguration) {
 
-        const { data } = await api.post(`/${this.route}`, challenge)
+        const { data } = await api.post<IChallenge>(`/${this.route}`, challenge)
         return data
     }
 

@@ -2,13 +2,16 @@ import logo from './logo.svg';
 import './App.css';
 import { GoogleMapsProvider, Panorama } from './contexts/GoogleMaps';
 import { AuthProvider } from './contexts/AuthContext';
+import { AlertsProvider } from './contexts/AlertsContext'
 import MainNavigation from './navigation';
 
 function App() {
 	return (
-		<AuthProvider>
-			<MainNavigation />
-		</AuthProvider>
+		<AlertsProvider>
+			<AuthProvider>
+				<MainNavigation />
+			</AuthProvider>
+		</AlertsProvider>
 
 		// <GoogleMapsProvider
 		// 	apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}

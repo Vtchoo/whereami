@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useHistory, useLocation, useParams } from "react-router"
 import { IPage } from ".."
 import MainLogo from "../../components/MainLogo"
+import { useAlerts } from "../../contexts/AlertsContext"
 import { useAuth } from "../../contexts/AuthContext"
 import { Panorama, Map, useGoogleMaps } from "../../contexts/GoogleMaps"
 import { GoogleMap, MapMouseEvent, Marker, Polyline } from "../../contexts/GoogleMaps/types"
@@ -19,6 +20,7 @@ function ChallengePage() {
     const { key } = useParams<{ key: string }>()
     const history = useHistory()
     const { user } = useAuth()
+    const { addAlert } = useAlerts()
     const { createMarker, createPolyline } = useGoogleMaps()
 
     // Pregame
@@ -170,7 +172,8 @@ function ChallengePage() {
 
         } catch (error) {
             console.log(error)
-            alert(error.response?.data?.message)
+            addAlert(error.response?.data?.message, { title: 'Error' })
+            // alert(error.response?.data?.message)
 
             if (error.response?.data?.skip)
                 setShowingResults(true)

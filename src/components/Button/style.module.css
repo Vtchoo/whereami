@@ -1,0 +1,67 @@
+.button {
+    display: flex;
+    /* margin-right: 0.5rem; */ /* replaced by gap on .buttons */
+    /* width: 100%; */
+    padding: 1em;
+    border-radius: 1em;
+    border-style: none;
+    color: white;     
+    cursor: pointer;
+    color: var(--white);
+    flex-direction: row;
+}
+
+.button h3 {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin: auto;
+    color: inherit;
+    gap: .25rem;
+}
+
+
+.button:hover {
+    filter: brightness(.9);
+}
+
+.button:active {
+    filter: brightness(.8)
+}
+
+.button.default {
+    background-color: var(--primary);
+}
+.button.accept {
+    background-color: var(--accept);
+}
+.button.danger {
+    background-color: var(--danger);
+}
+.button.warning {
+    background-color: var(--warning);
+}
+.button.wait {
+    background-color: var(--wait);
+}
+.button.neutral {
+    background-color: lightgray;
+    border: 1px solid lightgrey;
+    color: var(--primary-dark);
+}
+.button.dark {
+    background-color: var(--primary-dark);
+}
+.button.light {
+    background-color: var(--primary-light);
+}
+
+.button.disabled {
+    background-color: var(--disabled);
+}
+
+/* --accept: hsl(109, 100%, 25%);
+--disabled: hsl(0, 0%, 54%);
+--danger: hsl(350, 92%, 45%);
+--warning: hsl(22, 89%, 54%);
+--wait: hsl(40, 89%, 54%); */
