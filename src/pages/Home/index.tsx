@@ -37,7 +37,7 @@ function Home(props: any) {
             
             const challenge: IChallengeConfiguration = {
                 locations: 5,
-                time: 2 * 60
+                time: 5 * 60
             }
             
             const result = await Challenge.create(challenge)
