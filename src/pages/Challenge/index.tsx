@@ -30,6 +30,21 @@ function ChallengePage() {
         fetchChallenge()
     }, [])
 
+    useEffect(() => {
+
+        if (timer === undefined)
+            return
+       
+        if (timer === 0) {
+            return
+        }
+
+        const timeout = setTimeout(() => setTimer(timer - 1), 1000)
+
+        return () => clearTimeout(timeout)
+
+    }, [timer])
+
     async function fetchChallenge() {
 
         setLoading(true)
@@ -45,6 +60,15 @@ function ChallengePage() {
         }
 
         setLoading(false)
+    }
+
+    function handleStartChallenge() {
+
+        if(!challenge) 
+            return
+
+        nextPanorama()
+        setTimer(challenge.time)
     }
 
     function nextPanorama() {
@@ -139,18 +163,17 @@ function ChallengePage() {
                         <small>seconds</small>
                     </div>
                 </div>
-                <button className={style.button}>Start challenge!</button>
+                <button className={style.button} onClick={handleStartChallenge}>Start challenge!</button>
             </div>
         </div>
     )
 
+    // Timer display
+    const minutes = Math.floor(timer / 60).toString().padStart(2, '0')
+    const seconds = Math.floor(timer % 60).toString().padStart(2, '0')
+
     return (
         <div className={style.container}>
-            {JSON.stringify(challenge)}
-            <button onClick={nextPanorama}>Start challenge</button>
-            <div style={{ flex: 1, background: 'red' }}>
-
-            </div>
             {currentLocation &&
                 <Panorama
                     className={style.streetViewPanorama}
@@ -167,9 +190,21 @@ function ChallengePage() {
                         }
                     }}>
                     <>
-                        <div>
+                        <div className={style.infoContainer}>
                             <div>
-                                <span>{ }:{ }</span>
+                                <strong>{challenge.region?.name || 'World'}</strong>
+                            </div>
+                            <hr/>
+                            <div>
+                                <strong>{challenge.challengeLocations.indexOf(currentLocation) + 1}/{challenge.challengeLocations.length}</strong>
+                                <small>round</small>
+                            </div>
+                            <hr/>
+                            <div>
+                                <p className={`${style.timerText} ${timer <= 30 ? style.outOfTime : ''}`}>
+                                    <strong>{minutes}:{seconds}</strong>
+                                </p>
+                                {/*<small>time</small>*/}
                             </div>
                         </div>
                         <div className={style.minimapContainer}>

@@ -43,6 +43,42 @@
     height: 100%;
 }
 
+.infoContainer {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    padding: 1rem;
+    
+    border-radius: 1rem;
+
+    background-color: var(--white);
+    box-shadow: 0 0 5px rgba(0,0,0,.5);
+
+    gap: 1rem;
+
+    z-index: 2;
+}
+
+.infoContainer > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timerText {
+
+}
+
+.timerText.outOfTime {
+    color: red;
+}
+
 .minimapContainer {
     position: absolute;
 
@@ -53,8 +89,8 @@
     right: 2rem;
     bottom: 2rem;
 
-    width: 400px;
-    height: 300px;
+    width: 300px;
+    height: 250px;
     transition: 
         width .1s ease-in-out, 
         height .1s ease-in-out;

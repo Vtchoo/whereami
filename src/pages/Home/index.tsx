@@ -20,24 +20,24 @@ function Home(props: any) {
     async function handleGetRandomPanorama() {
         
         try {
-            // const locations: ILocation[] = []
-            // for (let i = 0; i < 5; i++) {
-            //     const { location, ...panorama } = await getRandomPanorama()
+            const locations: ILocation[] = []
+            for (let i = 0; i < 5; i++) {
+                const { location, ...panorama } = await getRandomPanorama()
 
-            //     console.log('panorama found:', { location, ...panorama })
+                console.log('panorama found:', { location, ...panorama })
 
-            //     locations.push({
-            //         pano: location.pano,
-            //         lat: typeof location.latLng.lat === 'function' ? location.latLng.lat() : location.latLng.lat,
-            //         lng: typeof location.latLng.lng === 'function' ? location.latLng.lng() : location.latLng.lng,
-            //         description: location.description,
-            //         shortdescription: location.description
-            //     })
-            //     // setPanoramas(panoramas => [...panoramas, panorama.location])
-            // }
+                locations.push({
+                    pano: location.pano,
+                    lat: typeof location.latLng.lat === 'function' ? location.latLng.lat() : location.latLng.lat,
+                    lng: typeof location.latLng.lng === 'function' ? location.latLng.lng() : location.latLng.lng,
+                    description: location.description,
+                    shortdescription: location.description
+                })
+                // setPanoramas(panoramas => [...panoramas, panorama.location])
+            }
     
             const challenge: IChallengeConfiguration = {
-                locations: 5,
+                locations,
                 time: 2 * 60,
             }
 
