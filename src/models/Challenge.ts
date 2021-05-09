@@ -2,6 +2,7 @@ import api from "../services/api"
 import { IChallengeLocation } from "./ChallengeLocation"
 import { IGuess } from "./Guess"
 import { ILocation } from "./Location"
+import { IRegion } from "./Region"
 
 interface IChallenge {
 
@@ -13,6 +14,9 @@ interface IChallenge {
     createdBy: number
     createdAt: Date
     expiresAt?: Date
+
+    regionId?: number
+    region?: IRegion
 
     challengeLocations: IChallengeLocation[]
 }
