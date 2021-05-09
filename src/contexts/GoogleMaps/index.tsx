@@ -1,10 +1,11 @@
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker } from './types'
+import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker, PolylineOptions, Polyline } from './types'
 
 interface GoogleMapsContextData {
     createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama
     createMap(element: HTMLElement, options?: MapOptions): GoogleMap
-    createMarker(map: GoogleMap, options?: MarkerOptions): Marker
+    createMarker(map: GoogleMap | undefined | null, options?: MarkerOptions): Marker
+    createPolyline(map: GoogleMap | undefined | null, options?: PolylineOptions): Polyline
     googleMapsLoaded: boolean
     getRandomPanorama(): Promise<StreetViewPanoramaData>
 }
@@ -149,11 +150,18 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
         return map
     }
 
-    function createMarker(map: GoogleMap, options: MarkerOptions) {
+    function createMarker(map: GoogleMap | undefined, options: MarkerOptions) {
         if (!googleMaps) throw new Error('GoogleMaps not loaded')
 
         const marker = new googleMaps.Marker({ ...options, map })
         return marker
+    }
+
+    function createPolyline(map: GoogleMap | undefined | null, options?: PolylineOptions) {
+        if (!googleMaps) throw new Error('GoogleMaps not loaded')
+        
+        const polyline = new googleMaps.Polyline({ ...options, map })
+        return polyline
     }
 
     return (
@@ -162,6 +170,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             createStreetView,
             createMap,
             createMarker,
+            createPolyline,
             getRandomPanorama
         }}>
             {children}

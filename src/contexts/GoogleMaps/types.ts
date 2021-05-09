@@ -257,7 +257,7 @@ export interface MapMouseEvent {
 // Marker 
 
 export interface Marker {
-    setMap(map: GoogleMap): void
+    setMap(map?: GoogleMap | null): void
     setLabel(label: string): void
     setPosition(latLng: LatLng | LatLngLiteral): void
     setTitle(title: string): void
@@ -299,6 +299,28 @@ export interface MarkerShape {
 }
 
 //
+// Polyline
+//
+
+export interface Polyline {
+    setMap(map?: GoogleMap | null): void
+}
+
+export interface PolylineOptions {
+    clickable?: boolean
+    draggable?: boolean
+    editable?: boolean
+    geodesic?: boolean
+    map?: GoogleMap | null
+    path?: LatLng[] | LatLngLiteral[]
+    strokeColor?: string
+    strokeOpacity?: number
+    strokeWeight?: number
+    visible?: boolean
+    zIndex?: number
+}
+
+//
 // Google Maps Api
 //
 
@@ -308,6 +330,7 @@ export interface GoogleMapsApi {
     StreetViewStatus: StreetViewStatus
     Map: new (container: HTMLElement, options?: MapOptions) => GoogleMap
     Marker: new (options?: MarkerOptions) => Marker
+    Polyline: new (options?: PolylineOptions) => Polyline
     StreetViewSource: StreetViewSource
     ControlPosition: ControlPosition
 }
