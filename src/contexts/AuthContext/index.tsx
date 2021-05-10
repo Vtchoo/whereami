@@ -38,7 +38,13 @@ function AuthProvider(props: AuthProviderProps) {
     }, [refreshToken])
     
     useEffect(() => {
-        if (!token) return
+        if (!token) {
+            delete api.defaults.headers.common.authorization
+            return
+        }
+
+        // Set api header
+        api.defaults.headers.common.authorization = `Bearer ${token}`
         
         const decode = jwt.decode(token) as {[key: string]: any}
         
@@ -52,7 +58,6 @@ function AuthProvider(props: AuthProviderProps) {
     }, [token])
     
     async function login(username: string, password: string) {
-        // console.log(`Loggin in with credentials ${username} pass: ${password}`)
 
         setAuthenticating(true)
 
@@ -63,7 +68,7 @@ function AuthProvider(props: AuthProviderProps) {
             localStorage.setItem('whereami-refreshToken', data.refreshToken)
             setRefreshToken(data.refreshToken)
 
-            api.defaults.headers.common.authorization = `Bearer ${data.token}`
+            // api.defaults.headers.common.authorization = `Bearer ${data.token}`
             setToken(data.token)
             
             setUser(data.user)
@@ -78,7 +83,7 @@ function AuthProvider(props: AuthProviderProps) {
     
     async function authenticate() {
 
-        // setAuthenticating(true)
+        setAuthenticating(true)
 
         const refreshToken = localStorage.getItem('whereami-refreshToken')
 
@@ -87,9 +92,9 @@ function AuthProvider(props: AuthProviderProps) {
         try {
             const { data } = await api.post<AuthResponse>('/refresh?user=1', { refreshToken })
 
-            api.defaults.headers.common.authorization = `Bearer ${data.token}`
             setRefreshToken(data.refreshToken)
-
+            
+            // api.defaults.headers.common.authorization = `Bearer ${data.token}`
             setToken(data.token)
             // console.log('Got refresh token', data.refreshToken)
 
@@ -106,7 +111,8 @@ function AuthProvider(props: AuthProviderProps) {
 
         try {
             const { data } = await api.post<AuthResponse>('/refresh', { refreshToken })
-
+            
+            // api.defaults.headers.common.authorization = `Bearer ${data.token}`
             setToken(data.token)
 
         } catch (error) {
