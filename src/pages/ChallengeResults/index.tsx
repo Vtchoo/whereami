@@ -58,7 +58,8 @@ function ChallengeResults() {
                     path: [
                         guessMarker.getPosition(),
                         locationMarker.getPosition()
-                    ]
+                    ],
+                    geodesic: true
                 })
 
                 lines.push(line)
