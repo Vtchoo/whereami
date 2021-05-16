@@ -42,7 +42,16 @@ function Home(props: any) {
             
             const result = await Challenge.create(challenge)
             
-            addAlert(`New challenge created successfully! Use this code to share with your friends:\n${result.key}`, { title: 'New Challenge!' })
+            addAlert(
+                `New challenge created successfully! Use this code to share with your friends:\n${result.key}`,
+                {
+                    title: 'New Challenge!',
+                    buttons: [
+                        { text: 'Ok' },
+                        { text: 'Play >', mode: 'accept', onClick: () => history.push(`/challenge/${result.key}`) }
+                    ]
+                }
+            )
             
         } catch (error) {
             console.log(error)
@@ -78,12 +87,21 @@ function Home(props: any) {
     
             const challenge: IChallengeConfiguration = {
                 locations,
-                time: 2 * 60,
+                time: 5 * 60,
             }
 
             const result = await Challenge.create(challenge)
             
-            addAlert(`New challenge created successfully! Use this code to share with your friends:\n${result.key}`, { title: 'New Challenge!' })
+            addAlert(
+                `New challenge created successfully! Use this code to share with your friends:\n${result.key}`,
+                {
+                    title: 'New Challenge!',
+                    buttons: [
+                        { text: 'Ok' },
+                        { text: 'Play >', mode: 'accept', onClick: () => history.push(`/challenge/${result.key}`) }
+                    ]
+                }
+            )
             
             console.log(result)
         } catch (error) {
