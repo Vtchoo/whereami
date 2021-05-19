@@ -1,6 +1,7 @@
 import { PageChallenge } from "./Challenge"
 import { PageChallengeResults } from "./ChallengeResults"
 import { PageHome } from "./Home"
+import { PageMyPlaces } from "./MyPlaces"
 
 interface IPage {
     name: string
@@ -24,6 +25,7 @@ const pages: IPage[] = [
     PageHome,
     PageChallenge,
     PageChallengeResults,
+    PageMyPlaces,
 ]
 
 export { pages }
