@@ -116,14 +116,18 @@ function Home(props: any) {
         history.push(`/challenge/${challengeKey}`)
     }
 
+    function handleViewMyPlaces() {
+        history.push(`/myplaces`)
+    }
+
     return (
         <div className={style.container}>
-            <div className={`${style.challengeCard} ${style.horizontal}`}>
+            <div className={`${style.card} ${style.horizontal}`}>
                 <div className={style.content} style={{ flex: 1 }}>
                     <h2>Start new challenge!</h2>
                     <p>Create new random challenge from anywhere in the world</p>
                 </div>
-                <hr/>
+                <hr />
                 <div style={{ display: "flex", flexDirection: "column", gap: '1rem' }}>
                     <h3>Create challenge</h3>
                     <button
@@ -131,7 +135,7 @@ function Home(props: any) {
                         disabled={creatingChallengeFromNew}
                         onClick={handleCreateFromNew}
                     >
-                        {creatingChallengeFromNew ? `${foundLocations.length}/${totalLocations} places found` : `New places` }
+                        {creatingChallengeFromNew ? `${foundLocations.length}/${totalLocations} places found` : `New places`}
                     </button>
                     <button
                         className={`${style.button} ${style.secondary}`}
@@ -143,7 +147,7 @@ function Home(props: any) {
                 </div>
             </div>
 
-            <div className={`${style.challengeCard} ${style.horizonal}`}>
+            <div className={`${style.card} ${style.horizonal}`}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
                     <div>
                         <h2>Play existing challenge</h2>
@@ -154,9 +158,18 @@ function Home(props: any) {
                         <input className={style.challengeInput} value={challengeKey} onChange={e => setChallengeKey(e.target.value)} />
                         <button className={`${style.button} ${style.primary}`} onClick={handlePlayChallenge}>Play challenge</button>
                     </div>
-                </div>  
+                </div>
             </div>
                 
+            <div className={`${style.card}`}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                    <div className={style.content} style={{ flex: 1 }}>
+                        <h2>My Places</h2>
+                        <p>View your favorite places here</p>
+                    </div>
+                    <button className={`${style.button} ${style.primary}`} onClick={handleViewMyPlaces}>View my places</button>
+                </div>
+            </div>
             
         </div>
     )

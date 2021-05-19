@@ -1,4 +1,5 @@
-import api from '../services/api'
+import api, { ApiResult } from '../services/api'
+import { ILocation, Location } from './Location'
 
 interface IUser {
     
@@ -50,6 +51,12 @@ class User {
 
 		await api.delete(`${User.route}/${id}`)
 		return
+	}
+
+	static async myPlaces() {
+
+		const { data } = await api.get<ApiResult<ILocation>>(`${User.route}/${Location.route}`)
+		return data
 	}
 	// static async login(username: string, password: string) {
 

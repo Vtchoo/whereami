@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
+
+.panoramaContainer {
+    flex: 1;
+}
+
+
+.locationsList {
+    display: flex;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.locationListContentContainer {
+    display: flex;
+    gap: 1rem;
+    padding: .5rem;
+}
+
+.locationCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 1rem;
+    background-color: white;
+
+    border-radius: .5rem;
+
+    box-shadow: 0 0 5px rgba(0,0,0,.25);
+}
+
+.locationCard > .description {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
+}
