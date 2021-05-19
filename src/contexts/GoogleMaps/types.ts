@@ -321,6 +321,20 @@ export interface PolylineOptions {
 }
 
 //
+// Static Street View panorama
+//
+
+export interface StaticStreetViewPanoramaOptions {
+    panoOrLocation: string | LatLngLiteral
+    size: { width: number, height: number }
+    heading?: number
+    fov?: number
+    pitch?: number
+    radius?: number
+    source?: 'default' | 'outdoor'
+}
+
+//
 // Google Maps Api
 //
 

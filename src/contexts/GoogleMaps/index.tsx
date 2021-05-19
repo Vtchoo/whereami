@@ -1,5 +1,5 @@
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker, PolylineOptions, Polyline } from './types'
+import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker, PolylineOptions, Polyline, StaticStreetViewPanoramaOptions } from './types'
 
 interface GoogleMapsContextData {
     createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama
@@ -8,6 +8,7 @@ interface GoogleMapsContextData {
     createPolyline(map: GoogleMap | undefined | null, options?: PolylineOptions): Polyline
     googleMapsLoaded: boolean
     getRandomPanorama(): Promise<StreetViewPanoramaData>
+    getStaticPanoramaUrl(options: StaticStreetViewPanoramaOptions): string
 }
 
 interface GoogleMapsProviderProps {
@@ -16,14 +17,6 @@ interface GoogleMapsProviderProps {
 }
 
 const GoogleMapsContext = createContext({} as GoogleMapsContextData)
-
-const streetViewPanoramaOptions = {
-	position: { lat: 46.9171876, lng: 17.8951832 },
-	pov: { heading: 100, pitch: 0 },
-	zoom: 1,
-	addressControl: false,
-	showRoadLabels: false,
-};
 
 function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderProps) {
 
@@ -99,6 +92,40 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
         })
     }
 
+    function getStaticPanoramaUrl(options: StaticStreetViewPanoramaOptions) {
+        
+        
+        const parameters: { [parameter: string]: string } = {}
+
+        parameters.key = apiKey || ''
+        
+        parameters.size = `${options.size.width}x${options.size.height}`
+        
+        if (typeof options.panoOrLocation === 'string')
+            parameters.pano = options.panoOrLocation
+        else
+            parameters.location = `${options.panoOrLocation.lat},${options.panoOrLocation.lng}`
+            
+        if (options.heading)
+            parameters.heading = options.heading.toString()
+        
+        if (options.fov)
+            parameters.fov = options.fov.toString()
+        
+        if (options.pitch)
+            parameters.pitch = options.pitch.toString()
+        
+        if (options.radius)
+            parameters.radius = options.radius.toString()
+        
+        if (options.source)
+            parameters.source = options.source
+        
+        const query = new URLSearchParams(parameters)
+        
+        return `https://maps.googleapis.com/maps/api/streetview?${query}`
+    }
+
     // useEffect(() => {
         
     //     if (!googleMaps) return
@@ -171,7 +198,8 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             createMap,
             createMarker,
             createPolyline,
-            getRandomPanorama
+            getRandomPanorama,
+            getStaticPanoramaUrl
         }}>
             {children}
         </GoogleMapsContext.Provider>
