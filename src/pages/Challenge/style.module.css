@@ -150,7 +150,9 @@
 
     align-items: center;
     justify-content: space-evenly;
-    height: 40%;
+    height: 50%;
+
+    gap: .5rem;
 }
 
 .playerResult {
@@ -175,4 +177,21 @@
 .scoreBar > div {
     height: 100%;
     background-color: var(--primary-light);
+}
+
+.actions {
+    display: flex;
+    gap: .5rem;
+}
+
+.actions .icon {
+    padding: .5rem;
+    border: 1px solid lightgrey;
+    border-radius: 500px;
+
+    cursor: pointer;
+}
+
+.actions .icon:hover {
+    filter: brightness(.9);
 }

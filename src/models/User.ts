@@ -55,9 +55,20 @@ class User {
 
 	static async myPlaces() {
 
-		const { data } = await api.get<ApiResult<ILocation>>(`${User.route}/${Location.route}`)
+		const { data } = await api.get<ApiResult<ILocation>>(`/${User.route}/${Location.route}`)
 		return data
 	}
+	
+	static async addLocationBookmark(locationId: number) {
+		
+        await api.post(`/${User.route}/${Location.route}/${locationId}`)
+        return
+    }
+    static async removeLocationBookmark(locationId: number) {
+
+        await api.delete(`/${User.route}/${Location.route}/${locationId}`)
+        return
+    }
 	// static async login(username: string, password: string) {
 
 	// 	const credentials: Partial<IUser> = {

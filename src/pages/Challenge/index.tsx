@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory, useLocation, useParams } from "react-router"
 import { IPage } from ".."
+import Icon from "../../components/Icon"
 import MainLogo from "../../components/MainLogo"
 import { useAlerts } from "../../contexts/AlertsContext"
 import { useAuth } from "../../contexts/AuthContext"
@@ -11,6 +12,8 @@ import { Game } from "../../game"
 import { Challenge, IChallenge } from "../../models/Challenge"
 import { ChallengeLocation, IChallengeLocation } from "../../models/ChallengeLocation"
 import { Guess, IGuess } from "../../models/Guess"
+import { ILocation } from "../../models/Location"
+import User from "../../models/User"
 
 import style from './style.module.css'
 
@@ -40,9 +43,12 @@ function ChallengePage() {
     const [markers, setMarkers] = useState<Marker[]>([])
     const [lines, setLines] = useState<Polyline[]>([])
 
+    // Other
+    const [myPlaces, setMyPlaces] = useState<ILocation[]>([])
 
     useEffect(() => {
         fetchChallenge()
+        fetchMyPlaces()
     }, [])
 
     useEffect(() => {
@@ -108,6 +114,17 @@ function ChallengePage() {
         }
 
         setLoading(false)
+    }
+
+    async function fetchMyPlaces() {
+
+        try {
+            const { results } = await User.myPlaces()
+
+            setMyPlaces(results)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     function handleStartChallenge() {
@@ -223,6 +240,32 @@ function ChallengePage() {
         }
     }
 
+    async function handleAddLocationBookmark() {
+
+        if (!results?.location?.id) return
+
+        try {
+            
+            await User.addLocationBookmark(results.location.id)
+            fetchMyPlaces()
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    async function handleRemoveLocationBookmark() {
+        if (!results?.location?.id) return
+
+        try {
+            
+            await User.removeLocationBookmark(results.location.id)
+            fetchMyPlaces()
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     //
     //
@@ -365,6 +408,13 @@ function ChallengePage() {
                         <h1>{Math.ceil(playerScore)} points</h1>
                         <div className={style.scoreBar}>
                             <div style={{ width: `${Math.ceil(playerScore / maxScore * 100)}%` }}/>
+                        </div>
+                        <p>{results?.location.description || 'No description for this location'}</p>
+                        <div className={style.actions}>
+                            {myPlaces.some(location => results?.location.id === location.id) ?
+                                <Icon icon='heart' className={style.icon} size='2.5rem' onClick={handleRemoveLocationBookmark}/>:
+                                <Icon icon='heart-outline' className={style.icon} size='2.5rem' onClick={handleAddLocationBookmark}/>
+                            }
                         </div>
                     </div>
 

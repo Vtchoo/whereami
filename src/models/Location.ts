@@ -1,4 +1,5 @@
 import api, { ApiResult } from "../services/api"
+import User from "./User"
 
 interface ILocation {
     id?: number
