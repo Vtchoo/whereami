@@ -10,7 +10,7 @@ function Header() {
             <div>
 
             </div>
-            <div style={{ justifyContent: "center" }}>
+            <div>
                 <h2>where am i</h2>
             </div>
             <div>
