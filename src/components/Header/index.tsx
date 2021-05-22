@@ -7,9 +7,15 @@ function Header() {
 
     return (
         <div className={style.header}>
-            .
-            <h2>where am i</h2>
-            {user?.username}
+            <div>
+
+            </div>
+            <div style={{ justifyContent: "center" }}>
+                <h2>where am i</h2>
+            </div>
+            <div>
+                {user?.username}
+            </div>
         </div>
     )
 }

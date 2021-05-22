@@ -9,3 +9,16 @@
     background-color: white;
     border-bottom: 1px solid lightgray;
 }
+
+.header > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.header > div:first-child {
+    justify-content: flex-start;
+}
+.header > div:last-child {
+    justify-content: flex-end;
+}
