@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useHistory } from "react-router"
 import { IPage } from ".."
 import { useAlerts } from "../../contexts/AlertsContext"
@@ -7,6 +7,8 @@ import { StreetViewLocation, StreetViewPanorama, StreetViewPanoramaData } from "
 import { Challenge, IChallenge, IChallengeConfiguration } from "../../models/Challenge"
 import { IChallengeLocation } from "../../models/ChallengeLocation"
 import { ILocation } from "../../models/Location"
+import { IRegion, Region } from "../../models/Region"
+import { RegionCard } from "./RegionCard"
 import style from './style.module.css'
 
 function Home(props: any) {
@@ -17,6 +19,8 @@ function Home(props: any) {
     const { getRandomPanorama } = useGoogleMaps()
 
     // State
+    const [regions, setRegions] = useState<IRegion[]>([])
+    
     const [showNewChallengeModal, setShowChallengeModal] = useState(false)
 
     const [creatingChallengeFromExisting, setCreatingChallengeFromExisting] = useState(false)
@@ -25,9 +29,30 @@ function Home(props: any) {
     const [totalLocations, setTotalLocations] = useState(5)
     const [foundLocations, setFoundLocations] = useState<StreetViewPanoramaData[]>([])
 
+
+
     const [challenge, setChallente] = useState<IChallenge>()
 
     const [challengeKey, setChallengeKey] = useState('')
+
+
+    // Effects
+    useEffect(() => {
+        fetchRegions()
+    }, [])
+
+    // Fetch data
+    const fetchRegions = useCallback(async () => {
+
+        try {
+            const { results: regions } = await Region.find({ showSquares: true })
+            setRegions(regions)
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+
 
     async function handleCreateFromExisting() {
 
@@ -66,17 +91,18 @@ function Home(props: any) {
 
         try {
             const locations: ILocation[] = []
+            
             for (let i = 0; i < totalLocations; i++) {
                 
                 const pano = await getRandomPanorama()
                 const { location, ...panorama } = pano
 
-                console.log('panorama found:', { location, ...panorama })
+                //console.log('panorama found:', { location, ...panorama })
 
                 locations.push({
                     pano: location.pano,
-                    lat: typeof location.latLng.lat === 'function' ? location.latLng.lat() : location.latLng.lat,
-                    lng: typeof location.latLng.lng === 'function' ? location.latLng.lng() : location.latLng.lng,
+                    lat: location.latLng.lat(),
+                    lng: location.latLng.lng(),
                     description: location.description,
                     shortdescription: location.description
                 })
@@ -103,9 +129,9 @@ function Home(props: any) {
                 }
             )
             
-            console.log(result)
+            //console.log(result)
         } catch (error) {
-            console.log(error)
+            //console.log(error)
         }
 
         setFoundLocations([])
@@ -159,6 +185,14 @@ function Home(props: any) {
                         <button className={`${style.button} ${style.primary}`} onClick={handlePlayChallenge}>Play challenge</button>
                     </div>
                 </div>
+            </div>
+
+            <div>
+                <h2>Choose your region</h2>
+                <p>Choose one of the available regions to play there</p>
+            </div>
+            <div className={style.horizontalScroll}>
+                {regions.map(region => <RegionCard region={region} key={region.id} />)}
             </div>
                 
             <div className={`${style.card}`}>

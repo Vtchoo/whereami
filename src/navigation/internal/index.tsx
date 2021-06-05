@@ -8,7 +8,13 @@ import style from './style.module.css'
 function InternalNavigation() {
 
     return (
-        <GoogleMapsProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+        <GoogleMapsProvider
+            apiKey={process.env.NODE_ENV === 'development' ?
+                process.env.REACT_APP_GOOGLE_MAPS_API_KEY :
+                process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+            }
+            version='3.44.14'
+        >
             <div className={style.mainContainer}>
             
                 <Header />

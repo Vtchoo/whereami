@@ -24,7 +24,7 @@ interface IChallenge {
 interface IChallengeConfiguration {
     time: number
     locations: ILocation[] | number
-    region?: number
+    regionId?: number
 }
 
 interface ChallengeRequestOptions {
