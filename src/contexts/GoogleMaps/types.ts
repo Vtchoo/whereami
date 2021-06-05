@@ -64,7 +64,7 @@ export interface StreetViewLink {
 export interface StreetViewLocation {
     pano: string
     description?: string
-    latLng: LatLng | LatLngLiteral
+    latLng: LatLng
     shortDescription?: string
 }
 
@@ -165,6 +165,36 @@ export interface StreetViewPanoramaOptions {
 export interface StreetViewPanorama extends MVCObject{
     setPano(pano: string): void
     setPosition(position: LatLngLiteral): void
+}
+
+//
+// Geocode
+//
+
+export interface GeocodeResponse {
+    plus_code: {
+        compound_code: string
+        global_code: string
+    }
+    results: GeocodeResult[]
+}
+
+export interface GeocodeResult {
+    address_components: {
+        long_name: string
+        short_name: string
+        types: string[]
+    }[]
+    formatted_address: string
+    geometry: {
+        location: {
+            lat: number
+            lng: number
+        }
+        location_type: string
+    }
+    place_id: string
+    types: string[]
 }
 
 //
