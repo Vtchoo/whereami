@@ -1,5 +1,6 @@
+import axios from 'axios'
 import { createContext, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker, PolylineOptions, Polyline, StaticStreetViewPanoramaOptions } from './types'
+import { GoogleMapsApi, MapOptions, StreetViewPanorama, StreetViewPanoramaData, StreetViewPanoramaOptions, StreetViewService, GoogleMap, MapMouseEvent, MarkerOptions, Marker, PolylineOptions, Polyline, StaticStreetViewPanoramaOptions, GeocodeResponse } from './types'
 
 interface GoogleMapsContextData {
     createStreetView(element: HTMLElement, options?: StreetViewPanoramaOptions): StreetViewPanorama
@@ -7,18 +8,31 @@ interface GoogleMapsContextData {
     createMarker(map: GoogleMap | undefined | null, options?: MarkerOptions): Marker
     createPolyline(map: GoogleMap | undefined | null, options?: PolylineOptions): Polyline
     googleMapsLoaded: boolean
-    getRandomPanorama(): Promise<StreetViewPanoramaData>
+    getRandomPanorama(options?: RandomPanoramaOptions): Promise<StreetViewPanoramaData>
     getStaticPanoramaUrl(options: StaticStreetViewPanoramaOptions): string
+    getGeocodeInfo(options: GeocodeRequestOptions): Promise<GeocodeResponse>
 }
 
 interface GoogleMapsProviderProps {
     apiKey?: string
+    version?: string
     children: ReactNode
+}
+
+interface RandomPanoramaOptions {
+    range?: { maxLat?: number, minLat?: number, maxLng?: number, minLng?: number }
+}
+
+interface GeocodeRequestOptions {
+    lat: number
+    lng: number
 }
 
 const GoogleMapsContext = createContext({} as GoogleMapsContextData)
 
 function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderProps) {
+
+    const version = props.version ?? 'weelkly'
 
     const [googleMaps, setGoogleMaps] = useState<GoogleMapsApi>()
     const [streetViewService, setStreetViewService] = useState<StreetViewService>()
@@ -29,7 +43,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             return setGoogleMaps((window as any).google.maps)
 
         const script = document.createElement('script')
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry`
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry&v=${version}`
         script.onload = (e) => {
             console.log('google maps api loaded')
             setGoogleMaps(() => (window as any).google.maps)
@@ -51,15 +65,24 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
 
     }, [googleMaps])
 
-    function getRandomPanorama(): Promise<StreetViewPanoramaData> {
-        
+    function getRandomPanorama(options?: RandomPanoramaOptions): Promise<StreetViewPanoramaData> {
+
+        const minLat = options?.range?.minLat ?? -90
+        const maxLat = options?.range?.maxLat ?? 90
+
+        const minLng = options?.range?.minLng ?? -180
+        const maxLng = options?.range?.maxLng ?? 180
+
+        const latRng = maxLat - minLat
+        const lngRng = maxLng - minLng
+
         return new Promise((resolve, reject) => {
             if (!streetViewService) throw new Error('No street view service loaded')
 
             const STREETVIEW_MAX_DISTANCE = 1000
             const position = {
-            	lat: Math.random() * 180 - 90,
-            	lng: Math.random() * 360 - 180,
+            	lat: minLat + Math.random() * latRng,
+            	lng: minLng + Math.random() * lngRng,
             }
             // const position = { lat: 46.9171876, lng: 17.8951832 }
             
@@ -73,7 +96,7 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
                 if (status === googleMaps?.StreetViewStatus.OK)
                     resolve(data)
                 else
-                    resolve(await getRandomPanorama())
+                    resolve(await getRandomPanorama(options))
             })
 
 
@@ -124,6 +147,13 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
         const query = new URLSearchParams(parameters)
         
         return `https://maps.googleapis.com/maps/api/streetview?${query}`
+    }
+
+    async function getGeocodeInfo(options: GeocodeRequestOptions) {
+
+        // console.log(options)
+        const { data } = await axios.get<GeocodeResponse>(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${options.lat},${options.lng}&key=${apiKey}`)
+        return data
     }
 
     // useEffect(() => {
@@ -199,7 +229,8 @@ function GoogleMapsProvider({ apiKey, children, ...props}: GoogleMapsProviderPro
             createMarker,
             createPolyline,
             getRandomPanorama,
-            getStaticPanoramaUrl
+            getStaticPanoramaUrl,
+            getGeocodeInfo
         }}>
             {children}
         </GoogleMapsContext.Provider>
